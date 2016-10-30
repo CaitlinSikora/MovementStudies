@@ -1,78 +1,13 @@
-# -*- coding: utf-8 -*-
-from flask import Flask, render_template, flash, session, redirect, url_for
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.wtf import Form
-from wtforms import FieldList
-from wtforms import Form as NoCsrfForm
-from wtforms.fields import StringField, FormField, SubmitField, SelectField
-from wtforms.validators import DataRequired, Length
-
-app = Flask(__name__)
-app.config.from_pyfile('app.cfg')
-db = SQLAlchemy(app)
-
-"""
-   Simple example to load and save a User instance with related phone
-   entries in a WTForm
-"""
+from flask import render_template, flash, redirect, session, url_for
+from app import app
+from app import db
+from .multimodel import UserForm, SegmentForm, CombinedForm, User, Segment, Video
 
 videos = ['3k9TNhTaP6g',
 'htn9HtJRvgE',
 'Vw4-BhHALv8',
 '1J_LKT_mWwo']
 
-choices = [('Punch','Punch'),('Dab','Dab'),('Float','Float'),('Flick','Flick'),('Press','Press'),('Glide','Glide'),('Wring','Wring'),('Slash','Slash')]
-
-
-# - - - Models - - -
-class Video(db.Model):
-    __tablename__ = 'videos'
-    entry = db.Column(db.Integer(),primary_key=True)
-    video = db.Column(db.String(50))
-    user_name = db.Column(db.String(50))
-    segments = db.relationship('Segment')
-
-class Segment(db.Model):
-    __tablename__ = 'segments'
-    segment_id = db.Column(db.Integer(), primary_key=True)
-    video_entry = db.Column(db.Integer(), db.ForeignKey('videos.entry'))
-    start_time = db.Column(db.String(4))
-    end_time = db.Column(db.String(4))
-    laban_effort = db.Column(db.String(50))
-    emotion = db.Column(db.String(50))
-    body = db.Column(db.String(50))
-
-class User(db.Model):
-    __tablename__ = 'users'
-    user_id = db.Column(db.Integer(), primary_key=True)
-    user_name = db.Column(db.String(50))
-    age = db.Column(db.String(50))
-    gender_id = db.Column(db.String(50))
-    country = db.Column(db.String(50))
-
-# - - - Forms - - -
-class UserForm(Form):
-    user_name = StringField('First and Last Names', validators=[DataRequired()])
-    age = StringField('Age')
-    gender_id = StringField('Gender Identity')
-    country = StringField('Birth Country')
-
-class SegmentForm(NoCsrfForm):
-    # this forms is never exposed so we can use the non CSRF version
-    start_time = StringField('Start Time', validators=[DataRequired(),Length(min=4, max=4)])
-    end_time = StringField('End Time', validators=[DataRequired(),Length(min=4, max=4)])
-    laban_effort = SelectField(u'Quality', choices = choices, validators = [DataRequired()])
-    emotion = StringField('Emotion',validators=[DataRequired()])
-    body = StringField('Body Parts Involved',validators=[DataRequired()])
-
-class CombinedForm(Form):
-    # video = StringField('Video', validators=[DataRequired()])
-    # we must provide empth Phone() instances else populate_obj will fail
-    segments = FieldList(FormField(SegmentForm, default=lambda: Segment()))
-    #submit = SubmitField('Submit')
-
-
-# - - - Routes - - -
 @app.route('/', methods=['GET', 'POST'])
 def get_user():
     user = User(user_name="name")
@@ -189,14 +124,3 @@ def vid_4():
 def thanks():
     return render_template('thanks.html',
                            user=session['user_name'])
-
-# - - - Execute - - -
-def prep_db():
-    db.drop_all()
-    db.create_all()
-    # db.session.add(Video(video="My Video"))
-    db.session.commit()
-
-if __name__ == '__main__':
-    prep_db()
-    app.run(debug=True, port=5002)

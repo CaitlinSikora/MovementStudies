@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, session, url_for
 from app import app
 from app import db
-from .multimodel import UserForm, SegmentForm, CombinedForm, User, Segment, Video
+from .forms import UserForm, SegmentForm, CombinedForm, User, Segment, Video
 
 videos = ['3k9TNhTaP6g',
 'htn9HtJRvgE',

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Encode Video</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<div class="flashes">
+    {% for message in get_flashed_messages() %}
+    <h3>{{ message }}</h3>
+    {% endfor %}
+</div>
+
+<h2>Encode Movements for Video {{ num }}</h2>
+<h3>Please watch the video and add a field for each expressive movement you see in the video.</h3>
+<div id="muteYouTubeVideoPlayer"></div>
+<!--<iframe id="myVideo" width="560" height="315" volume="0" src={{ this_video }} frameborder="0" allowfullscreen></iframe>-->
+
+<form method="POST">
+<!-- just to display all potential errors -->
+{% if form.errors %}
+    <ul class="errors">
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <li>{{ form[field_name].label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endif %}
+
+    <div data-toggle="fieldset" id="phone-fieldset">
+         <h3>Movements</h3>
+        <table>
+            <tr>
+                <th>Start Time (m:ss)</th>
+                <th>End Time (m:ss)</th>
+                <th>Quality</th>
+                <th>Emotion</th>
+                <th>Body Parts Involved</th>
+                <th></th>
+            </tr>
+            {% for segment in form.segments %}
+                <tr data-toggle="fieldset-entry">
+                    <td>{{ segment.start_time }}</td>
+                    <td>{{ segment.end_time }}</td>
+                    <td>{{ segment.laban_effort }}</td>
+                    <td>{{ segment.emotion }}</td>
+                    <td>{{ segment.body }}</td>
+                    <td><button type="button" data-toggle="fieldset-remove-row" id="phone-{{loop.index0}}-remove">- Remove</button></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <button type="button" data-toggle="fieldset-add-row"
+                                          data-target="#phone-fieldset">+ Add Movement</button>
+    </div>
+    {{ form.hidden_tag() }}
+
+<!--<h5> <a href="{{ url_for('get_user') }}">Home</a> </h5>-->
+<p><input id="submit" type="submit" value="Next Video"><span id='instruct'></span></p>
+<!--<p id='submit_button'>{{ form.submit }}</p>-->
+</form>
+
+
+<script src="{{ url_for("static", filename="js/page.js") }}"></script>
+<script async src="https://www.youtube.com/iframe_api"></script>
+<script>
+ function onYouTubeIframeAPIReady() {
+  var player;
+  var video = '{{ this_video }}';
+  console.log(video);
+  player = new YT.Player('muteYouTubeVideoPlayer', {
+    videoId: '{{ this_video }}', // YouTube Video ID
+    width: 560,               // Player width (in px)
+    height: 316,              // Player height (in px)
+    playerVars: {       // Auto-play the video on load
+      controls: 1,        // Show pause/play buttons in player
+      showinfo: 0,        // Hide the video title
+      modestbranding: 1,  // Hide the Youtube Logo
+      fs: 0,              // Hide the full screen button
+      cc_load_policy: 0, // Hide closed captions
+      iv_load_policy: 3,  // Hide the Video Annotations
+      autohide: 0 
+    },
+    events: {
+      onReady: function(e) {
+        e.target.mute();
+      }
+    }
+  });
+ }
+ 
+</script>
+{% endblock %}
+</body>
+</html>

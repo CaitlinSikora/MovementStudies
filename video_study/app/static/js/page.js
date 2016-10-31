@@ -24,7 +24,9 @@ $(function() {
         $(window).keypress(function(e) {
             if (e.keyCode == 0 || e.keyCode == 32) {
                 console.log('Space pressed');
-                time = '0:33';
+                time = vid.time();
+                markings.push(time);
+                markings.sort();
                 var target = $($this.find("button[data-toggle=fieldset-add-row]").data("target"));
                 console.log(target);
                 var oldrow = target.find("[data-toggle=fieldset-entry]:last");

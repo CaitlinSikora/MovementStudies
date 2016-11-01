@@ -10,8 +10,8 @@
       } 
       canvas {
         position:absolute; 
-        top:642px; 
-        left:82px;
+        top:614px; 
+        left:40px;
         z-index:100;
       } 
       vid {
@@ -20,7 +20,7 @@
       }
       form {
         position: absolute;
-        top: 700px;
+        top: 680px;
       }
 
     </style>
@@ -36,9 +36,7 @@
 
 <h2>Encode Movements for Video {{ num }}</h2>
 <h3>Please watch the video and add a field for each expressive movement you see in the video.</h3>
-<div id="muteYouTubeVideoPlayer"></div>
-<!--<iframe id="myVideo" width="560" height="315" volume="0" src={{ this_video }} frameborder="0" allowfullscreen></iframe>-->
-
+<vid></vid>
 <form method="POST">
 <!-- just to display all potential errors -->
 {% if form.errors %}
@@ -85,45 +83,22 @@
 
 
 <script src="{{ url_for("static", filename="js/page.js") }}"></script>
-<script async src="https://www.youtube.com/iframe_api"></script>
 <script>
- // function onYouTubeIframeAPIReady() {
- //  var player;
- //  var video = '{{ this_video }}';
- //  console.log(video);
- //  player = new YT.Player('muteYouTubeVideoPlayer', {
- //    videoId: '{{ this_video }}', // YouTube Video ID
- //    width: 560,               // Player width (in px)
- //    height: 316,              // Player height (in px)
- //    playerVars: {       // Auto-play the video on load
- //      controls: 1,        // Show pause/play buttons in player
- //      showinfo: 0,        // Hide the video title
- //      modestbranding: 1,  // Hide the Youtube Logo
- //      fs: 0,              // Hide the full screen button
- //      cc_load_policy: 0, // Hide closed captions
- //      iv_load_policy: 3,  // Hide the Video Annotations
- //      autohide: 0 
- //    },
- //    events: {
- //      onReady: function(e) {
- //        e.target.mute();
- //      }
- //    }
- //  });
- // }
 
 var vid;
 var markings = [0,25];
 
 function setup() {
   // specify multiple formats for different browsers
-  vid = createVideo('static/video1.mov');
+  vid = createVideo('{{ this_video }}');
   vid.show();
   vid.showControls();
   vid.volume(0);
-  vid.size(700,500);
-  vid.position(40, 185);  
-  createCanvas(700,20);          
+  vid.size(600,400);
+  vid.position(40, 260);
+  console.log(vid.position().y);
+  console.log(vid.size());
+  createCanvas(600,20);          
                   
 }
 
@@ -133,7 +108,7 @@ function draw() {
   //image(vid,0,0); // draw the video frame to canvas
   stroke('#1474cd');
   strokeWeight(2);
-  line(64,9,473,9);
+  line(108,9,412,9);
   strokeWeight(6);
   for (var i=0; i<markings.length;i++){
     //console.log(markings[i]);
@@ -143,7 +118,7 @@ function draw() {
 
 function timeTransform(time){
   var fraction = time/vid.duration();
-  var posTime = 64 + fraction*(473-64);
+  var posTime = 108 + fraction*(412-108);
   return posTime;
 }
  

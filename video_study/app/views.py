@@ -3,10 +3,14 @@ from app import app
 from app import db
 from .forms import UserForm, SegmentForm, CombinedForm, User, Segment, Video
 
-videos = ['3k9TNhTaP6g',
-'htn9HtJRvgE',
-'Vw4-BhHALv8',
-'1J_LKT_mWwo']
+videos = ['static/video1.mov',
+'static/video2.mov',
+'static/video3.mov',
+'static/video4.mov',
+'static/video5.mov',
+'static/video6.mov']
+
+num = 0
 
 @app.route('/', methods=['GET', 'POST'])
 def get_user():
@@ -28,11 +32,11 @@ def instruct():
     return render_template('instructions.html',
                            user=session['user_name'])
 
-@app.route('/1', methods=['GET', 'POST'])
-def vid_1():
-    num = 1
+@app.route('/video', methods=['GET', 'POST'])
+def vid():
+    global num
     # always "blindly" load the user
-    video = Video(user_name=session['user_name'],video=str(num))
+    video = Video(user_name=session['user_name'],video=str(num+1))
     # video = Video.query.first()
 
     # if User has no phones, provide an empty one so table is rendered
@@ -48,77 +52,11 @@ def vid_1():
         db.session.add(video)
         db.session.commit()
         flash("Saved Changes")
-        return redirect(url_for('vid_2'))
-    return render_template('segments.html', form=form, num=num, this_video=videos[num-1])
-
-@app.route('/2', methods=['GET', 'POST'])
-def vid_2():
-    num = 2
-    # always "blindly" load the user
-    video = Video(user_name=session['user_name'],video=str(num))
-    # video = Video.query.first()
-
-    # if User has no phones, provide an empty one so table is rendered
-    if len(video.segments) == 0:
-        video.segments = [Segment(start_time="0:00",end_time="0:10")]
-        # flash("empty Segment provided")
-
-    # else: forms loaded through db relation
-    form = CombinedForm(obj=video)
-
-    if form.validate_on_submit():
-        form.populate_obj(video)
-        db.session.add(video)
-        db.session.commit()
-        flash("Saved Changes")
-        return redirect(url_for('vid_3'))
-    return render_template('segments.html', form=form, num=num, this_video=videos[num-1])
-
-@app.route('/3', methods=['GET', 'POST'])
-def vid_3():
-    num = 3
-    # always "blindly" load the user
-    video = Video(user_name=session['user_name'],video=str(num))
-    # video = Video.query.first()
-
-    # if User has no phones, provide an empty one so table is rendered
-    if len(video.segments) == 0:
-        video.segments = [Segment(start_time="0:00",end_time="0:10")]
-        # flash("empty Segment provided")
-
-    # else: forms loaded through db relation
-    form = CombinedForm(obj=video)
-
-    if form.validate_on_submit():
-        form.populate_obj(video)
-        db.session.add(video)
-        db.session.commit()
-        flash("Saved Changes")
-        return redirect(url_for('vid_4'))
-    return render_template('segments.html', form=form, num=num, this_video=videos[num-1])
-
-@app.route('/4', methods=['GET', 'POST'])
-def vid_4():
-    num = 4
-    # always "blindly" load the user
-    video = Video(user_name=session['user_name'],video=str(num))
-    # video = Video.query.first()
-
-    # if User has no phones, provide an empty one so table is rendered
-    if len(video.segments) == 0:
-        video.segments = [Segment(start_time="0",end_time="10")]
-        # flash("empty Segment provided")
-
-    # else: forms loaded through db relation
-    form = CombinedForm(obj=video)
-
-    if form.validate_on_submit():
-        form.populate_obj(video)
-        db.session.add(video)
-        db.session.commit()
-        flash("Saved Changes")
-        return redirect(url_for('thanks'))
-    return render_template('segments.html', form=form, num=num, this_video=videos[num-1])
+        num += 1
+        print num
+        num=num%len(videos)
+        return redirect(url_for('vid'))
+    return render_template('segments.html', form=form, num=num+1, this_video=videos[num])
 
 @app.route('/thanks', methods=['GET', 'POST'])
 def thanks():

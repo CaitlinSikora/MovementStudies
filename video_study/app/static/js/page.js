@@ -93,3 +93,10 @@ $('#submit').mouseleave(function(){
     var instruct = '';
     $('#instruct').html(instruct);
 });
+
+/* Need to change to just one time per movement on a separate branch.
+Need to download and trim other videos.
+Need to add array of videos to choose from.
+Need to make a separate form for the full video encoding.
+Need to add option of doing another video.
+Some key other than space bar */

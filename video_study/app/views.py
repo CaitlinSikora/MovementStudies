@@ -106,7 +106,7 @@ def vid_4():
 
     # if User has no phones, provide an empty one so table is rendered
     if len(video.segments) == 0:
-        video.segments = [Segment(start_time="0:00",end_time="0:10")]
+        video.segments = [Segment(start_time="0",end_time="10")]
         # flash("empty Segment provided")
 
     # else: forms loaded through db relation

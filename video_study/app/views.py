@@ -10,6 +10,8 @@ videos = ['static/video1.mov',
 'static/video5.mov',
 'static/video6.mov']
 
+durations = [25.088,33.976289,34.416667,25.68127,21.182211,24.4]
+
 num = 0
 
 @app.route('/', methods=['GET', 'POST'])
@@ -56,7 +58,7 @@ def vid():
         print num
         num=num%len(videos)
         return redirect(url_for('vid'))
-    return render_template('segments.html', form=form, num=num+1, this_video=videos[num])
+    return render_template('segments.html', form=form, num=num+1, this_video=videos[num], duration=durations[num])
 
 @app.route('/thanks', methods=['GET', 'POST'])
 def thanks():

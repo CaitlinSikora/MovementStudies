@@ -50,8 +50,8 @@ class UserForm(Form):
 
 class SegmentForm(NoCsrfForm):
     # this forms is never exposed so we can use the non CSRF version
-    start_time = StringField('Start Time', validators=[DataRequired(),Length(min=4, max=4)])
-    end_time = StringField('End Time', validators=[DataRequired(),Length(min=4, max=4)])
+    start_time = StringField('Start Time', validators=[DataRequired(),Length(min=1, max=10)])
+    end_time = StringField('End Time', validators=[DataRequired(),Length(min=1, max=10)])
     laban_effort = SelectField(u'Quality', choices = choices, validators = [DataRequired()])
     emotion = StringField('Emotion',validators=[DataRequired()])
     body = StringField('Body Parts Involved',validators=[DataRequired()])

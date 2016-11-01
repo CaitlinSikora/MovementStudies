@@ -24,7 +24,12 @@ $(function() {
         $(window).keypress(function(e) {
             if (e.keyCode == 0 || e.keyCode == 32) {
                 console.log('Space pressed');
-                time = '0:33';
+                prev_time = time;
+                time = vid.time();
+                markings.push(time);
+                markings.sort();
+                console.log("Added");
+                console.log(markings);
                 var target = $($this.find("button[data-toggle=fieldset-add-row]").data("target"));
                 console.log(target);
                 var oldrow = target.find("[data-toggle=fieldset-entry]:last");
@@ -34,16 +39,19 @@ $(function() {
                 var elem_num = parseInt(elem_id.replace(/.*-(\d{1,4})-.*/m, '$1')) + 1;
                 row.attr('data-id', elem_num);
                 row.find(":input").each(function() {
-                    console.log(this.id);
+                    //console.log(this.id);
                     var id = $(this).attr('id').replace('-' + (elem_num - 1) + '-', '-' + (elem_num) + '-');
+                    console.log(id);
                     // YOU MIGHT NEED THIS LINE!
                     //$(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
                     if ($(this).attr('name').includes('start_time')){
-                        $(this).attr('name', id).attr('id', id).val('time').removeAttr("checked");
+                        $(this).attr('name', id).attr('id', id).val(prev_time).removeAttr("checked");
                         console.log($(this).attr('name'));
-                    }
-                    if ($(this).attr('name').includes('end_time')){
+                    } else if ($(this).attr('name').includes('end_time')){
                         $(this).attr('name', id).attr('id', id).val(time).removeAttr("checked");
+                        console.log($(this).attr('name'));
+                    } else {
+                        $(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
                         console.log($(this).attr('name'));
                     }
                 });
@@ -56,13 +64,24 @@ $(function() {
         $this.find("button[data-toggle=fieldset-remove-row]").click(function() {
             if($this.find("[data-toggle=fieldset-entry]").length > 1) {
                 var thisRow = $(this).closest("[data-toggle=fieldset-entry]");
+                console.log("removing");
+                var removeTime = thisRow.find(':input').find('end_time').prevObject[1].value;
+                var index = markings.indexOf(Number(removeTime));
+                if(index!=-1){
+                    console.log(markings.indexOf(0));
+                    console.log(markings);
+                    console.log(removeTime);
+                    console.log(index);
+                    markings.splice(index, 1);
+                }
                 thisRow.remove();
             }
         }); //End remove row
     });
 });
 
-var time;
+var time=0;
+var prev_time;
 
 $('#submit').mouseover(function(){
     console.log('hovering');

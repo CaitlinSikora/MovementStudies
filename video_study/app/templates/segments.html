@@ -10,8 +10,8 @@
       } 
       canvas {
         position:absolute; 
-        top:642px; 
-        left:82px;
+        top:614px; 
+        left:40px;
         z-index:100;
       } 
       vid {
@@ -20,25 +20,27 @@
       }
       form {
         position: absolute;
-        top: 700px;
+        top: 640px;
       }
+      #addendum {
+/*        display:hide;
+*/      }
 
     </style>
 </head>
 <body>
 {% extends "base.html" %}
 {% block content %}
+<!--
 <div class="flashes">
     {% for message in get_flashed_messages() %}
     <h3>{{ message }}</h3>
     {% endfor %}
-</div>
+</div>-->
 
-<h2>Encode Movements for Video {{ num }}</h2>
-<h3>Please watch the video and add a field for each expressive movement you see in the video.</h3>
-<div id="muteYouTubeVideoPlayer"></div>
-<!--<iframe id="myVideo" width="560" height="315" volume="0" src={{ this_video }} frameborder="0" allowfullscreen></iframe>-->
-
+<!--<h2>Encode Movements for Video {{ num }}</h2>-->
+<h3>Watch the video and press "." each time you see the end of a movement.</h3><h3>Then adjust the times and fill out the fields for each movement.</h3>
+<vid></vid>
 <form method="POST">
 <!-- just to display all potential errors -->
 {% if form.errors %}
@@ -73,57 +75,54 @@
                 </tr>
             {% endfor %}
         </table>
-        <button type="button" data-toggle="fieldset-add-row"
-                                          data-target="#phone-fieldset">+ Add Movement</button>
+        <!--<button type="button" data-toggle="fieldset-add-row"
+                                          data-target="#phone-fieldset">+ Add Movement</button>-->
+    </div>
+    <div id='addendum'>
+      <p><input id="segmentsdone" type="submit" value="Finished"><span id="instruct"></span></p>
+    
     </div>
     {{ form.hidden_tag() }}
 
+
 <!--<h5> <a href="{{ url_for('get_user') }}">Home</a> </h5>-->
-<p><input id="submit" type="submit" value="Next Video"><span id='instruct'></span></p>
+
 <!--<p id='submit_button'>{{ form.submit }}</p>-->
 </form>
 
 
 <script src="{{ url_for("static", filename="js/page.js") }}"></script>
-<script async src="https://www.youtube.com/iframe_api"></script>
 <script>
- // function onYouTubeIframeAPIReady() {
- //  var player;
- //  var video = '{{ this_video }}';
- //  console.log(video);
- //  player = new YT.Player('muteYouTubeVideoPlayer', {
- //    videoId: '{{ this_video }}', // YouTube Video ID
- //    width: 560,               // Player width (in px)
- //    height: 316,              // Player height (in px)
- //    playerVars: {       // Auto-play the video on load
- //      controls: 1,        // Show pause/play buttons in player
- //      showinfo: 0,        // Hide the video title
- //      modestbranding: 1,  // Hide the Youtube Logo
- //      fs: 0,              // Hide the full screen button
- //      cc_load_policy: 0, // Hide closed captions
- //      iv_load_policy: 3,  // Hide the Video Annotations
- //      autohide: 0 
- //    },
- //    events: {
- //      onReady: function(e) {
- //        e.target.mute();
- //      }
- //    }
- //  });
- // }
+$('#segmentsdone').click(function(){
+    $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}{{ form.complete }}</p>');
+});
+$('#segmentsdone').mouseover(function(){
+    console.log('hovering');
+    var instruct = '  Wait! Are you finished adding movements?';
+    $('#instruct').html(instruct);
+});
+$('#segmentsdone').mouseleave(function(){
+    console.log('not hovering');
+    var instruct = '';
+    $('#instruct').html(instruct);
+});
+
 
 var vid;
-var markings = [0,25];
+var markings = [0,{{ duration }}];
+console.log(markings);
 
 function setup() {
   // specify multiple formats for different browsers
-  vid = createVideo('static/video1.mov');
+  vid = createVideo('{{ this_video }}');
   vid.show();
   vid.showControls();
   vid.volume(0);
-  vid.size(700,500);
-  vid.position(40, 185);  
-  createCanvas(700,20);          
+  vid.size(600,400);
+  vid.position(40, 220);
+  console.log(vid.position().y);
+  console.log(vid.size());
+  createCanvas(600,20);          
                   
 }
 
@@ -133,7 +132,7 @@ function draw() {
   //image(vid,0,0); // draw the video frame to canvas
   stroke('#1474cd');
   strokeWeight(2);
-  line(64,9,473,9);
+  line(108,9,412,9);
   strokeWeight(6);
   for (var i=0; i<markings.length;i++){
     //console.log(markings[i]);
@@ -143,7 +142,7 @@ function draw() {
 
 function timeTransform(time){
   var fraction = time/vid.duration();
-  var posTime = 64 + fraction*(473-64);
+  var posTime = 108 + fraction*(412-108);
   return posTime;
 }
  

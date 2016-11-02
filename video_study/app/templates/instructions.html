@@ -3,17 +3,19 @@
 
 {% block content %}
     <link rel="stylesheet" href="static/base.css" />
+    <style>
+        tr {
+            padding: 0 40px;
+        }
+        th {
+            padding: 10px 20px;
+        }
+    </style>
     <div class="contain_form">
         <h1>Instructions</h1>
         <p>Hi, {{ user }}. Thanks for your willingness to participate in this study.</p>
             <p>You'll be asked to watch a few short videos in search of expressive movements. Please leave the videos muted.</p>
-            <ol>
-            <li>Watch the video in it's entirety, jotting down times when you believe a person is moving expressively.</li>
-            <li>Watch the video again, noting start and end time for each movement.</li>
-            <li>Below the video, click the 'Add' button until you have rows for the appropriate number of movements.</li>
-            <li>Fill in start and end times, quality, emotion being expressed, and body parts involved for each movement.</li>
-            </ol>
-                <table>Qualities will be encoded as one of the following 8 options. Use your best intuition about what the quality labels mean.
+                <table>Please use your intuition to label each movement with one of the following 8 qualities.
                     <tr>
                         <th>Slash</th>
                         <th>Dab</th>
@@ -25,9 +27,9 @@
                         <th>Float</th>
                     </tr>
                 </table>
-            <p>When you have filled out the form, you will press the submit button to move on the next video. There are no right answers here, but you must fill out the form completely.</p>
+            <p>There are no wrong answers here. Trust your intuition.</p>
             <p>Do you understand the instructions and agree to watch the videos without sound?</p>
-            <form action="{{ url_for('vid_1') }}">
+            <form action="{{ url_for('vid') }}">
                 <input type="submit" value="Agree" />
             </form>
     </div>

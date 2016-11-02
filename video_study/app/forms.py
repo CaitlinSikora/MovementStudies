@@ -21,6 +21,8 @@ class Video(db.Model):
     entry = db.Column(db.Integer(),primary_key=True)
     video = db.Column(db.String(50))
     user_name = db.Column(db.String(50))
+    overall = db.Column(db.String(100))
+    reason = db.Column(db.String(200))
     segments = db.relationship('Segment')
 
 class Segment(db.Model):
@@ -60,5 +62,12 @@ class CombinedForm(Form):
     # video = StringField('Video', validators=[DataRequired()])
     # we must provide empth Phone() instances else populate_obj will fail
     segments = FieldList(FormField(SegmentForm, default=lambda: Segment()))
-    #submit = SubmitField('Submit')
+    complete = SubmitField('Complete Survey')
+    submit = SubmitField('Do Another Video')
+    overall = StringField('Overall Interpretation', validators=[DataRequired()])
+    reason = StringField('Overall Interpretation', validators=[DataRequired()])
+
+
+
+
 

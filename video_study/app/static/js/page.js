@@ -101,17 +101,5 @@ var time=0;
 var prev_time;
 var first = true;
 
-$('#submit').mouseover(function(){
-    console.log('hovering');
-    var instruct = '  Wait! Are you finished adding movements?';
-    $('#instruct').html(instruct);
-});
-$('#submit').mouseleave(function(){
-    console.log('not hovering');
-    var instruct = '';
-    $('#instruct').html(instruct);
-});
 
-/* Need to change to just one time per movement on a separate branch.
-Need to make a separate form for the full video encoding.
-Need to find way to get out of video loop. */
+/* Need to change to just one time per movement on a separate branch.*/

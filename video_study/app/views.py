@@ -57,7 +57,10 @@ def vid():
         num += 1
         print num
         num=num%len(videos)
-        return redirect(url_for('vid'))
+        if form.complete.data:
+            return redirect(url_for('thanks'))
+        else:
+            return redirect(url_for('vid'))
     return render_template('segments.html', form=form, num=num+1, this_video=videos[num], duration=durations[num])
 
 @app.route('/thanks', methods=['GET', 'POST'])

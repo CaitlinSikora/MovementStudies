@@ -10,7 +10,7 @@
       } 
       canvas {
         position:absolute; 
-        top:654px; 
+        top:614px; 
         left:40px;
         z-index:100;
       } 
@@ -20,22 +20,26 @@
       }
       form {
         position: absolute;
-        top: 680px;
+        top: 640px;
       }
+      #addendum {
+/*        display:hide;
+*/      }
 
     </style>
 </head>
 <body>
 {% extends "base.html" %}
 {% block content %}
+<!--
 <div class="flashes">
     {% for message in get_flashed_messages() %}
     <h3>{{ message }}</h3>
     {% endfor %}
-</div>
+</div>-->
 
-<h2>Encode Movements for Video {{ num }}</h2>
-<h3>Please watch the video and add a field for each expressive movement you see in the video.</h3>
+<!--<h2>Encode Movements for Video {{ num }}</h2>-->
+<h3>Watch the video and press "." each time you see the end of a movement.</h3><h3>Then adjust the times and fill out the fields for each movement.</h3>
 <vid></vid>
 <form method="POST">
 <!-- just to display all potential errors -->
@@ -71,19 +75,39 @@
                 </tr>
             {% endfor %}
         </table>
-        <button type="button" data-toggle="fieldset-add-row"
-                                          data-target="#phone-fieldset">+ Add Movement</button>
+        <!--<button type="button" data-toggle="fieldset-add-row"
+                                          data-target="#phone-fieldset">+ Add Movement</button>-->
+    </div>
+    <div id='addendum'>
+      <p><input id="segmentsdone" type="submit" value="Finished"><span id="instruct"></span></p>
+    
     </div>
     {{ form.hidden_tag() }}
 
+
 <!--<h5> <a href="{{ url_for('get_user') }}">Home</a> </h5>-->
-<p><input id="submit" type="submit" value="Next Video"><span id='instruct'></span></p>
+
 <!--<p id='submit_button'>{{ form.submit }}</p>-->
 </form>
 
 
 <script src="{{ url_for("static", filename="js/page.js") }}"></script>
 <script>
+$('#segmentsdone').click(function(){
+    $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}{{ form.complete }}</p>');
+});
+$('#segmentsdone').mouseover(function(){
+    console.log('hovering');
+    var instruct = '  Wait! Are you finished adding movements?';
+    $('#instruct').html(instruct);
+});
+$('#segmentsdone').mouseleave(function(){
+    console.log('not hovering');
+    var instruct = '';
+    $('#instruct').html(instruct);
+});
+
+
 var vid;
 var markings = [0,{{ duration }}];
 console.log(markings);
@@ -95,7 +119,7 @@ function setup() {
   vid.showControls();
   vid.volume(0);
   vid.size(600,400);
-  vid.position(40, 260);
+  vid.position(40, 220);
   console.log(vid.position().y);
   console.log(vid.size());
   createCanvas(600,20);          

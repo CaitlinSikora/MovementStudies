@@ -12,7 +12,7 @@ from wtforms.validators import DataRequired, Length
    entries in a WTForm
 """
 
-choices = [('Punch','Punch'),('Dab','Dab'),('Float','Float'),('Flick','Flick'),('Press','Press'),('Glide','Glide'),('Wring','Wring'),('Slash','Slash')]
+choices = [(0,'Select'),('Punch','Punch'),('Dab','Dab'),('Float','Float'),('Flick','Flick'),('Press','Press'),('Glide','Glide'),('Wring','Wring'),('Slash','Slash')]
 
 
 # - - - Models - - -
@@ -54,7 +54,7 @@ class SegmentForm(NoCsrfForm):
     # this forms is never exposed so we can use the non CSRF version
     start_time = StringField('Start Time', validators=[DataRequired(),Length(min=1, max=10)])
     end_time = StringField('End Time', validators=[DataRequired(),Length(min=1, max=10)])
-    laban_effort = SelectField(u'Quality', choices = choices, validators = [DataRequired()])
+    laban_effort = SelectField(u'Quality', choices = choices, validators = [DataRequired()], default=(0, 'Select'))
     emotion = StringField('Emotion',validators=[DataRequired()])
     body = StringField('Body Parts Involved',validators=[DataRequired()])
 

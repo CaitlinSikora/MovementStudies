@@ -109,8 +109,11 @@ $('#segmentsdone').mouseleave(function(){
 
 
 var vid;
-var markings = [0,{{ duration }}];
-console.log(markings);
+var duration = {{ duration }};
+var markings = [];
+var segments = [];
+var drag = false;
+var changefield;
 
 function setup() {
   // specify multiple formats for different browsers
@@ -122,7 +125,11 @@ function setup() {
   vid.position(40, 220);
   console.log(vid.position().y);
   console.log(vid.size());
-  createCanvas(600,20);          
+  createCanvas(600,20);
+
+  markings.push(new Marking(0));
+  markings.push(new Marking(duration));
+  console.log(markings.length);         
                   
 }
 
@@ -133,18 +140,71 @@ function draw() {
   stroke('#1474cd');
   strokeWeight(2);
   line(108,9,412,9);
-  strokeWeight(6);
   for (var i=0; i<markings.length;i++){
-    //console.log(markings[i]);
-    line(timeTransform(markings[i]),7,timeTransform(markings[i]),13);
+    markings[i].drawMarking();
+  }
+  if (drag){
+    markings[drag].dragMarking();
+    changefield.attr('name', drag-2).attr('id', drag-2).val(markings[drag].time.toFixed(2)).removeAttr("checked");
   }
 }
 
 function timeTransform(time){
-  var fraction = time/vid.duration();
+  var fraction = time/duration;
   var posTime = 108 + fraction*(412-108);
   return posTime;
 }
+function inverseTransform(xPos){
+  var fraction = duration/(412-108);
+  var time = fraction*(xPos-108);
+  return time;
+}
+
+function Marking(time){
+  this.time=time;
+  this.xPos=timeTransform(time);
+
+  this.dragMarking=function(){
+    this.xPos=mouseX;
+    this.time=inverseTransform(this.xPos);
+    console.log(this.time);
+  };
+
+  this.drawMarking=function(){
+    strokeWeight(6);
+    line(this.xPos,7,this.xPos,13);
+  };
+
+}
+
+function Segment(time){
+  this.start = new Marking(time-2);
+  this.end = new Marking(time);
+}
+
+
+function mousePressed(){
+  for (var i=2; i<markings.length;i++){
+    //console.log(markings[i]);
+    if (mouseX<=(markings[i].xPos+3)&&mouseX>=(markings[i].xPos-3)&&mouseY<=13&&mouseY>=7){
+      drag = i;
+      $("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").each(function() {
+         if ($(this).attr('data-id')==drag-2){
+          $(this).find(":input").each(function() {
+              if ($(this).attr('name').includes('end_time')){
+                  changefield=$(this);
+              }
+          });
+        }
+      });
+    }
+  }
+}
+
+function mouseReleased(){
+  drag = false;
+}
+
  
 </script>
 <script src="static/js/p5.js" type="text/javascript"></script>

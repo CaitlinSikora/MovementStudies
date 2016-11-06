@@ -26,16 +26,17 @@ $(function() {
             if (e.keyCode == 46) {
                 console.log('Space pressed');
                 prev_time = time;
-                time = vid.time();
-                markings.push(time);
-                markings.sort();
+                time = vid.time().toFixed(2);
+                markings.push(new Marking(time));
+                //markings.sort();
                 console.log("Added");
                 console.log(markings);
                 var target = $($this.find("button[data-toggle=fieldset-add-row]").data("target"));
-                console.log(target);
+                console.log("target",target);
                 var oldrow = target.find("[data-toggle=fieldset-entry]:last");
                 console.log("id",oldrow.find(":input")[0].id);
                 if (first){
+                    oldrow.attr('data-id', 0);
                     oldrow.find(":input").each(function() {
                         var id = $(this).attr('id').replace('-' + (elem_num - 1) + '-', '-' + (elem_num) + '-');
                         //$(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
@@ -44,6 +45,9 @@ $(function() {
                             console.log($(this).attr('name'));
                         } else if ($(this).attr('name').includes('end_time')){
                             $(this).attr('name', id).attr('id', id).val(time).removeAttr("checked");
+                            console.log($(this).attr('name'));
+                        } else {
+                            $(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
                             console.log($(this).attr('name'));
                         }
                     });
@@ -82,14 +86,12 @@ $(function() {
             if($this.find("[data-toggle=fieldset-entry]").length > 1) {
                 var thisRow = $(this).closest("[data-toggle=fieldset-entry]");
                 console.log("removing");
-                var removeTime = thisRow.find(':input').find('end_time').prevObject[1].value;
-                var index = markings.indexOf(Number(removeTime));
+                //var removeTime = thisRow.find(':input').find('end_time').prevObject[1].value;
+                //var index = markings.indexOf(Number(removeTime));
+                var index=int(thisRow.attr('data-id'));
+                console.log(index);
                 if(index!=-1){
-                    console.log(markings.indexOf(0));
-                    console.log(markings);
-                    console.log(removeTime);
-                    console.log(index);
-                    markings.splice(index, 1);
+                    markings.splice(index+2, 1);
                 }
                 thisRow.remove();
             }

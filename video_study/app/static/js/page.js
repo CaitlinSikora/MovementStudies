@@ -32,6 +32,11 @@ $(function() {
                     prev_time = 0;
                 }
                 segments.push(new Segment(time));
+                segmentIndex+=1;
+                segments.sort(function(a, b){
+                    return a.end_time > b.end_time;
+                });
+                console.log("next index",segmentIndex);
                 //markings.sort();
                 console.log("Added");
                 var target = $($this.find("button[data-toggle=fieldset-add-row]").data("target"));
@@ -116,9 +121,11 @@ $(function() {
             if($this.find("[data-toggle=fieldset-entry]").length > 1) {
                 var thisRow = $(this).closest("[data-toggle=fieldset-entry]");
                 console.log("removing");
-                //var removeTime = thisRow.find(':input').find('end_time').prevObject[1].value;
-                //var index = markings.indexOf(Number(removeTime));
-                var index=int(thisRow.attr('data-id'));
+                var removeTime = thisRow.find(':input').find('end_time').prevObject[1].value;
+                //var index = segments.indexOf(Number(removeTime));
+                var index = segments.map(function(e) { return e.index; }).indexOf(int(thisRow.attr('data-id')));
+                console.log("index remove",index);
+                //var index=int(thisRow.attr('data-id'));
                 console.log(index);
                 if(index!=-1){
                     segments.splice(index, 1);

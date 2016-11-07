@@ -115,6 +115,7 @@ var segments = [];
 var drag = false;
 var dragWhich;
 var changefield;
+var segmentIndex=1;
 
 function setup() {
   vid = createVideo('{{ this_video }}');
@@ -201,6 +202,9 @@ function Segment(time){
     this.start = new Marking(0.0+0.1-0.1);
   }
   this.end = new Marking(time);
+  this.index = segmentIndex;
+  this.end_time = this.end.time;
+  console.log("added index",segmentIndex);
 
   this.drawSegment=function(){
     stroke(0,255,0);
@@ -217,7 +221,9 @@ function Segment(time){
   };
 
   this.dragEnd=function(bound1){
-    return this.end.dragMarking(this.start.xPos,bound1);
+    end_time = this.end.dragMarking(this.start.xPos,bound1);
+    this.end_time = end_time;
+    return end_time;
   };
 }
 
@@ -227,13 +233,13 @@ function mousePressed(){
       drag = i;
       dragWhich = 0;
       console.log("drag",drag);
-      changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+drag+"]").find(":input[name='segments-"+drag+"-start_time']");
+      changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+segments[drag].index+"]").find(":input[name='segments-"+segments[drag].index+"-start_time']");
     }
     if (mouseX<=(segments[i].end.xPos+3)&&mouseX>=(segments[i].end.xPos-3)&&mouseY<=13&&mouseY>=7){
       drag = i;
       dragWhich = 1;
       console.log("drag",drag);
-      changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+drag+"]").find(":input[name='segments-"+drag+"-end_time']");
+      changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+segments[drag].index+"]").find(":input[name='segments-"+segments[drag].index+"-end_time']");
     }
   }
 }

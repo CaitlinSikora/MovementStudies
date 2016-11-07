@@ -113,10 +113,10 @@ var duration = {{ duration }};
 var markings = [];
 var segments = [];
 var drag = false;
+var dragWhich;
 var changefield;
 
 function setup() {
-  // specify multiple formats for different browsers
   vid = createVideo('{{ this_video }}');
   vid.show();
   vid.showControls();
@@ -125,28 +125,39 @@ function setup() {
   vid.position(40, 220);
   console.log(vid.position().y);
   console.log(vid.size());
-  createCanvas(600,20);
-
-  markings.push(new Marking(0));
-  markings.push(new Marking(duration));
-  console.log(markings.length);         
-                  
+  createCanvas(600,20);      
+  
+  segments.push(new Segment(0));           
 }
 
 function draw() {
-  //console.log(vid.time());
   background(255);
-  //image(vid,0,0); // draw the video frame to canvas
-  stroke('#1474cd');
-  strokeWeight(2);
-  line(108,9,412,9);
-  for (var i=0; i<markings.length;i++){
-    markings[i].drawMarking();
+  drawTimeline();
+  for (var i=1; i<segments.length;i++){
+    segments[i].drawSegment();
   }
   if (drag){
-    markings[drag].dragMarking();
-    changefield.attr('name', drag-2).attr('id', drag-2).val(markings[drag].time.toFixed(2)).removeAttr("checked");
+    if (dragWhich==0){
+      var newTime = Math.round(segments[drag].dragStart(segments[drag-1].end.xPos)*100)/100;
+      changefield.val(newTime);
+    } else {
+      if (drag<segments.length-1){
+        var newTime = Math.round(segments[drag].dragEnd(segments[drag+1].start.xPos)*100)/100;
+      } else {
+        var newTime = Math.round(segments[drag].dragEnd(timeTransform(duration))*100)/100;
+      }
+      changefield.val(newTime);
+    }
   }
+}
+
+function drawTimeline(){
+  stroke(157,157,157);
+  strokeWeight(2);
+  line(108,9,412,9);
+  strokeWeight(6);
+  line(timeTransform(0),7,timeTransform(0),13);
+  line(timeTransform(duration),7,timeTransform(duration),13);
 }
 
 function timeTransform(time){
@@ -164,10 +175,16 @@ function Marking(time){
   this.time=time;
   this.xPos=timeTransform(time);
 
-  this.dragMarking=function(){
-    this.xPos=mouseX;
+  this.dragMarking=function(bound0,bound1){
+    if (mouseX>=bound0&&mouseX<=bound1){
+      this.xPos=mouseX;
+    } else if (mouseX<bound0){
+      this.xPos=bound0;
+    } else {
+      this.xPos=bound1;
+    }
     this.time=inverseTransform(this.xPos);
-    console.log(this.time);
+    return this.time;
   };
 
   this.drawMarking=function(){
@@ -178,25 +195,45 @@ function Marking(time){
 }
 
 function Segment(time){
-  this.start = new Marking(time-2);
+  if (time-1>0){
+    this.start = new Marking(time-1);
+  } else {
+    this.start = new Marking(0.0+0.1-0.1);
+  }
   this.end = new Marking(time);
+
+  this.drawSegment=function(){
+    stroke(0,255,0);
+    this.start.drawMarking();
+    stroke(255,0,0);
+    this.end.drawMarking();
+    stroke('#1474cd');
+    strokeWeight(4);
+    line(this.start.xPos,9,this.end.xPos,9);
+  };
+
+  this.dragStart=function(bound0){
+    return this.start.dragMarking(bound0,this.end.xPos);
+  };
+
+  this.dragEnd=function(bound1){
+    return this.end.dragMarking(this.start.xPos,bound1);
+  };
 }
 
-
 function mousePressed(){
-  for (var i=2; i<markings.length;i++){
-    //console.log(markings[i]);
-    if (mouseX<=(markings[i].xPos+3)&&mouseX>=(markings[i].xPos-3)&&mouseY<=13&&mouseY>=7){
+  for (var i=1; i<segments.length;i++){
+    if (mouseX<=(segments[i].start.xPos+3)&&mouseX>=(segments[i].start.xPos-3)&&mouseY<=13&&mouseY>=7){
       drag = i;
-      $("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").each(function() {
-         if ($(this).attr('data-id')==drag-2){
-          $(this).find(":input").each(function() {
-              if ($(this).attr('name').includes('end_time')){
-                  changefield=$(this);
-              }
-          });
-        }
-      });
+      dragWhich = 0;
+      console.log("drag",drag);
+      changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+drag+"]").find(":input[name='segments-"+drag+"-start_time']");
+    }
+    if (mouseX<=(segments[i].end.xPos+3)&&mouseX>=(segments[i].end.xPos-3)&&mouseY<=13&&mouseY>=7){
+      drag = i;
+      dragWhich = 1;
+      console.log("drag",drag);
+      changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+drag+"]").find(":input[name='segments-"+drag+"-end_time']");
     }
   }
 }
@@ -204,6 +241,28 @@ function mousePressed(){
 function mouseReleased(){
   drag = false;
 }
+
+// function mousePressed(){
+//   for (var i=2; i<markings.length;i++){
+//     //console.log(markings[i]);
+//     if (mouseX<=(markings[i].xPos+3)&&mouseX>=(markings[i].xPos-3)&&mouseY<=13&&mouseY>=7){
+//       drag = i;
+//       $("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").each(function() {
+//          if ($(this).attr('data-id')==drag-2){
+//           $(this).find(":input").each(function() {
+//               if ($(this).attr('name').includes('end_time')){
+//                   changefield=$(this);
+//               }
+//           });
+//         }
+//       });
+//     }
+//   }
+// }
+
+// function mouseReleased(){
+//   drag = false;
+// }
 
  
 </script>

@@ -25,59 +25,89 @@ $(function() {
             console.log(e.keyCode);
             if (e.keyCode == 46) {
                 console.log('Space pressed');
-                prev_time = time;
-                time = vid.time().toFixed(2);
-                markings.push(new Marking(time));
+                time = Math.round(vid.time()*100)/100;
+                if (time-1 > 0){
+                    prev_time = time-1;
+                } else {
+                    prev_time = 0;
+                }
+                segments.push(new Segment(time));
                 //markings.sort();
                 console.log("Added");
-                console.log(markings);
                 var target = $($this.find("button[data-toggle=fieldset-add-row]").data("target"));
                 console.log("target",target);
                 var oldrow = target.find("[data-toggle=fieldset-entry]:last");
                 console.log("id",oldrow.find(":input")[0].id);
+                var row = oldrow.clone(true, true);
+                console.log(row.find(":input")[0]);
+                var elem_id = row.find(":input")[0].id;
+                var elem_num = parseInt(elem_id.replace(/.*-(\d{1,4})-.*/m, '$1')) + 1;
+                row.attr('data-id', elem_num);
+                row.find(":input").each(function() {
+                    //console.log(this.id);
+                    var id = $(this).attr('id').replace('-' + (elem_num - 1) + '-', '-' + (elem_num) + '-');
+                    console.log(id);
+                    // YOU MIGHT NEED THIS LINE!
+                    //$(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
+                    if ($(this).attr('name').includes('start_time')){
+                        $(this).attr('name', id).attr('id', id).val(prev_time).removeAttr("checked");
+                        console.log($(this).attr('name'));
+                    } else if ($(this).attr('name').includes('end_time')){
+                        $(this).attr('name', id).attr('id', id).val(time).removeAttr("checked");
+                        console.log($(this).attr('name'));
+                    } else {
+                        $(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
+                        console.log($(this).attr('name'));
+                    }
+                });
+                oldrow.after(row);
                 if (first){
-                    oldrow.attr('data-id', 0);
-                    oldrow.find(":input").each(function() {
-                        var id = $(this).attr('id').replace('-' + (elem_num - 1) + '-', '-' + (elem_num) + '-');
-                        //$(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
-                        if ($(this).attr('name').includes('start_time')){
-                            $(this).attr('name', id).attr('id', id).val(prev_time).removeAttr("checked");
-                            console.log($(this).attr('name'));
-                        } else if ($(this).attr('name').includes('end_time')){
-                            $(this).attr('name', id).attr('id', id).val(time).removeAttr("checked");
-                            console.log($(this).attr('name'));
-                        } else {
-                            $(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
-                            console.log($(this).attr('name'));
-                        }
-                    });
+                    oldrow.remove();
                     first = false;
-                } else {
-                    var row = oldrow.clone(true, true);
-                    console.log(row.find(":input")[0]);
-                    var elem_id = row.find(":input")[0].id;
-                    var elem_num = parseInt(elem_id.replace(/.*-(\d{1,4})-.*/m, '$1')) + 1;
-                    row.attr('data-id', elem_num);
-                    row.find(":input").each(function() {
-                        //console.log(this.id);
-                        var id = $(this).attr('id').replace('-' + (elem_num - 1) + '-', '-' + (elem_num) + '-');
-                        console.log(id);
-                        // YOU MIGHT NEED THIS LINE!
-                        //$(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
-                        if ($(this).attr('name').includes('start_time')){
-                            $(this).attr('name', id).attr('id', id).val(prev_time).removeAttr("checked");
-                            console.log($(this).attr('name'));
-                        } else if ($(this).attr('name').includes('end_time')){
-                            $(this).attr('name', id).attr('id', id).val(time).removeAttr("checked");
-                            console.log($(this).attr('name'));
-                        } else {
-                            $(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
-                            console.log($(this).attr('name'));
-                        }
-                    });
-                    oldrow.after(row);
                 }
             }
+                // if (first){
+                //     oldrow.attr('data-id', 0);
+                //     oldrow.find(":input").each(function() {
+                //         var id = $(this).attr('id').replace('-' + (elem_num - 1) + '-', '-' + (elem_num) + '-');
+                //         //$(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
+                //         if ($(this).attr('name').includes('start_time')){
+                //             $(this).val(prev_time);
+                //             console.log($(this).attr('name'));
+                //         } else if ($(this).attr('name').includes('end_time')){
+                //             $(this).val(time);
+                //             console.log($(this).attr('name'));
+                //         } else {
+                //             //$(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
+                //             console.log($(this).attr('name'));
+                //         }
+                //     });
+                //     first = false;
+                // } else {
+                //     var row = oldrow.clone(true, true);
+                //     console.log(row.find(":input")[0]);
+                //     var elem_id = row.find(":input")[0].id;
+                //     var elem_num = parseInt(elem_id.replace(/.*-(\d{1,4})-.*/m, '$1')) + 1;
+                //     row.attr('data-id', elem_num);
+                //     row.find(":input").each(function() {
+                //         //console.log(this.id);
+                //         var id = $(this).attr('id').replace('-' + (elem_num - 1) + '-', '-' + (elem_num) + '-');
+                //         console.log(id);
+                //         // YOU MIGHT NEED THIS LINE!
+                //         //$(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
+                //         if ($(this).attr('name').includes('start_time')){
+                //             $(this).attr('name', id).attr('id', id).val(prev_time).removeAttr("checked");
+                //             console.log($(this).attr('name'));
+                //         } else if ($(this).attr('name').includes('end_time')){
+                //             $(this).attr('name', id).attr('id', id).val(time).removeAttr("checked");
+                //             console.log($(this).attr('name'));
+                //         } else {
+                //             $(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
+                //             console.log($(this).attr('name'));
+                //         }
+                //     });
+                // }
+            //}
         });
         //End add new entry
 
@@ -91,7 +121,7 @@ $(function() {
                 var index=int(thisRow.attr('data-id'));
                 console.log(index);
                 if(index!=-1){
-                    markings.splice(index+2, 1);
+                    segments.splice(index, 1);
                 }
                 thisRow.remove();
             }
@@ -100,7 +130,7 @@ $(function() {
 });
 
 var time=0;
-var prev_time;
+var prev_time=0;
 var first = true;
 
 

@@ -93,9 +93,16 @@
 
 <script src="{{ url_for("static", filename="js/page.js") }}"></script>
 <script>
-$('#segmentsdone').click(function(){
-    $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}{{ form.complete }}</p>');
-});
+console.log({{choice}});
+if ({{ choice }}){
+  $('#segmentsdone').click(function(){
+      $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}{{ form.complete }}</p>');
+  });
+} else {
+  $('#segmentsdone').click(function(){
+      $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}</p>');
+  });
+}
 $('#segmentsdone').mouseover(function(){
     console.log('hovering');
     var instruct = '  Wait! Are you finished adding movements?';
@@ -150,6 +157,7 @@ function draw() {
       changefield.val(newTime);
     }
   }
+  console.log({{num}},vid.duration());
 }
 
 function drawTimeline(){

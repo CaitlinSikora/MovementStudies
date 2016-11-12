@@ -2,17 +2,31 @@ from flask import render_template, flash, redirect, session, url_for
 from app import app
 from app import db
 from .forms import UserForm, SegmentForm, CombinedForm, User, Segment, Video
+import random
 
-videos = ['static/video1.mov',
-'static/video2.mov',
-'static/video3.mov',
-'static/video4.mov',
-'static/video5.mov',
-'static/video6.mov']
+videos = [#'static/blurredVideos/video1.mov',
+'static/blurredVideos/video2.mov',
+#'static/blurredVideos/video3.mov',
+'static/blurredVideos/video4.mov',
+'static/blurredVideos/video5.mov',
+'static/blurredVideos/video6.mov']
 
-durations = [25.088,33.976289,34.416667,25.68127,21.182211,24.4]
+mocapVideos = ['static/mocapVideos/AlisonAngryClip.mov',
+'static/mocapVideos/EdwinContentClip.mov',
+'static/mocapVideos/AlisonJoyfulClip.mov',
+'static/mocapVideos/EdwinSadClip.mov',
+'static/mocapVideos/AlisonContentClip.mov',
+'static/mocapVideos/EdwinAngryClip.mov',
+'static/mocapVideos/AlisonSadClip.mov',
+'static/mocapVideos/EdwinJoyfulClip.mov']
+
+#durations = [25.088,33.976289,34.416667,25.68127,21.182211,24.4]
+durations = [33.976289,25.68127,21.182211,24.4]
+
+moDurations = [31.8,32.633333,39.1,35.633333,44.566667,32.833333,33.966667,33.7]
 
 num = 0
+moNum = 0
 
 @app.route('/', methods=['GET', 'POST'])
 def get_user():
@@ -43,7 +57,7 @@ def vid():
 
     # if User has no phones, provide an empty one so table is rendered
     if len(video.segments) == 0:
-        video.segments = [Segment(start_time="0:00",end_time="0:10")]
+        video.segments = [Segment(start_time="0",end_time="10")]
         # flash("empty Segment provided")
 
     # else: forms loaded through db relation
@@ -60,8 +74,104 @@ def vid():
         if form.complete.data:
             return redirect(url_for('thanks'))
         else:
-            return redirect(url_for('vid'))
-    return render_template('segments.html', form=form, num=num+1, this_video=videos[num], duration=durations[num])
+            return redirect(url_for('moVid'))
+    return render_template('segments.html', form=form, num=num+1, this_video=videos[num], duration=durations[num], choice=0)
+
+@app.route('/video2', methods=['GET', 'POST'])
+def vid2():
+    global num
+    # always "blindly" load the user
+    video = Video(user_name=session['user_name'],video=str(num+1))
+    # video = Video.query.first()
+
+    # if User has no phones, provide an empty one so table is rendered
+    if len(video.segments) == 0:
+        video.segments = [Segment(start_time="0",end_time="10")]
+        # flash("empty Segment provided")
+
+    # else: forms loaded through db relation
+    form = CombinedForm(obj=video)
+
+    if form.validate_on_submit():
+        form.populate_obj(video)
+        db.session.add(video)
+        db.session.commit()
+        flash("Saved Changes")
+        num += 1
+        print num
+        num=num%len(videos)
+        if form.complete.data:
+            return redirect(url_for('thanks'))
+        else:
+            choice = random.randint(1, 3)
+            if choice==1:
+                return redirect(url_for('vid2'))
+            else:
+                return redirect(url_for('moVid2'))
+    return render_template('segments.html', form=form, num=num+1, this_video=videos[num], duration=durations[num], choice=1)
+
+@app.route('/moVideo', methods=['GET', 'POST'])
+def moVid():
+    global moNum
+    # always "blindly" load the user
+    video = Video(user_name=session['user_name'],video=str(moNum+1))
+    # video = Video.query.first()
+
+    # if User has no phones, provide an empty one so table is rendered
+    if len(video.segments) == 0:
+        video.segments = [Segment(start_time="0",end_time="10")]
+        # flash("empty Segment provided")
+
+    # else: forms loaded through db relation
+    form = CombinedForm(obj=video)
+
+    if form.validate_on_submit():
+        form.populate_obj(video)
+        db.session.add(video)
+        db.session.commit()
+        flash("Saved Changes")
+        moNum += 1
+        print moNum
+        moNum=moNum%len(mocapVideos)
+        if form.complete.data:
+            return redirect(url_for('thanks'))
+        else:
+            return redirect(url_for('moVid2'))
+    return render_template('segments.html', form=form, num=moNum+1, this_video=mocapVideos[moNum], duration=moDurations[moNum],choice=0)
+
+@app.route('/moVideo2', methods=['GET', 'POST'])
+def moVid2():
+    global moNum
+    # always "blindly" load the user
+    video = Video(user_name=session['user_name'],video=str(moNum+1))
+    # video = Video.query.first()
+
+    # if User has no phones, provide an empty one so table is rendered
+    if len(video.segments) == 0:
+        video.segments = [Segment(start_time="0",end_time="10")]
+        # flash("empty Segment provided")
+
+    # else: forms loaded through db relation
+    form = CombinedForm(obj=video)
+
+    if form.validate_on_submit():
+        form.populate_obj(video)
+        db.session.add(video)
+        db.session.commit()
+        flash("Saved Changes")
+        moNum += 1
+        print moNum
+        moNum=moNum%len(mocapVideos)
+        if form.complete.data:
+            return redirect(url_for('thanks'))
+        else:
+            choice = random.randint(1, 3)
+            if choice==1:
+                return redirect(url_for('vid2'))
+            else:
+                return redirect(url_for('moVid2'))
+    return render_template('segments.html', form=form, num=moNum+1, this_video=mocapVideos[moNum+1], duration=moDurations[moNum+1],choice=1)
+
 
 @app.route('/thanks', methods=['GET', 'POST'])
 def thanks():

@@ -25,9 +25,9 @@ $(function() {
             console.log(e.keyCode);
             if (e.keyCode == 46) {
                 console.log('Space pressed');
-                time = int(vid.time()*100)*0.01;
+                time = precise_round(vid.time(),2);
                 if (time-1 > 0){
-                    prev_time = time-1;
+                    prev_time = precise_round(time-1,2);
                 } else {
                     prev_time = 0;
                 }
@@ -139,6 +139,18 @@ $(function() {
 var time=0;
 var prev_time=0;
 var first = true;
+
+function precise_round(value, decPlaces){
+    var val = value * Math.pow(10, decPlaces);
+    var fraction = (Math.round((val-parseInt(val))*10)/10);
+
+    //this line is for consistency with .NET Decimal.Round behavior
+    // -342.055 => -342.06
+    if(fraction == -0.5) fraction = -0.6;
+
+    val = Math.round(parseInt(val) + fraction) / Math.pow(10, decPlaces);
+    return val;
+}
 
 
 /* Need to change to just one time per movement on a separate branch.*/

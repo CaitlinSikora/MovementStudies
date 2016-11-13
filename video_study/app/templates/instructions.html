@@ -14,8 +14,8 @@
     <div class="contain_form">
         <h1>Instructions</h1>
         <p>Hi, {{ user }}. Thanks for your willingness to participate in this study.</p>
-            <p>You'll be asked to watch a few short videos in search of expressive movements. Please leave the videos muted.</p>
-                <table>Please use your intuition to label each movement with one of the following 8 qualities.
+            <p>You'll be asked to watch a few short videos in search of expressive movements. Please classify each movement with one of the following qualities from the drop-down menu:
+                <table>
                     <tr>
                         <th>Slash</th>
                         <th>Dab</th>
@@ -27,8 +27,9 @@
                         <th>Float</th>
                     </tr>
                 </table>
-            <p>There are no wrong answers here. Trust your intuition.</p>
-            <p>Do you understand the instructions and agree to watch the videos without sound?</p>
+            <p>There are no wrong answers here. Trust your intuition. Then, fill out the rest of the form.</p>
+            <p>Data will be collected and analyzed privately for a thesis project at NYU Tandon School of Engineering. Participant data will not be shared.</p>
+            <p>Do you understand the instructions and agree to participate?</p>
             <form action="{{ url_for('vid') }}">
                 <input type="submit" value="Agree" />
             </form>

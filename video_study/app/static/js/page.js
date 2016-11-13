@@ -25,7 +25,7 @@ $(function() {
             console.log(e.keyCode);
             if (e.keyCode == 46) {
                 console.log('Space pressed');
-                time = Math.round(vid.time()*100)/100;
+                time = int(vid.time()*100)*0.01;
                 if (time-1 > 0){
                     prev_time = time-1;
                 } else {

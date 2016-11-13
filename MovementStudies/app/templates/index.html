@@ -1,0 +1,21 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <link rel="stylesheet" href="static/base.css" />
+    <div class="contain_form">
+        <iframe src="//giphy.com/embed/ggP7QKGmTsv4Y" width="480" height="261" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+        <h1>Enter your information</h1>
+        <form action="" method="post" name="login">
+            {{ form.hidden_tag() }}
+            <p>Please enter the following information for tracking purposes. Your data will be kept private.</p>
+                <p>
+                Your Name {{ form.user_name(size=80) }}<br>
+                Age {{ form.age(size=91) }}<br>
+                Gender Identity {{ form.gender_id(size=81) }}<br>
+                Country of Birth {{ form.country(size=94) }}<br>
+            </p>
+            <p><input type="submit" value="Continue"></p>
+        </form>
+    </div>
+{% endblock %}

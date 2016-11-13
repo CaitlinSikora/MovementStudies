@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Encode Video</title>
+    <style>
+      body {
+        padding: 0; 
+        margin: 0;
+      } 
+      canvas {
+        position:absolute; 
+        top:614px; 
+        left:40px;
+        z-index:100;
+      } 
+      vid {
+        position:relative;
+        z-index:-1;
+      }
+      form {
+        position: absolute;
+        top: 640px;
+      }
+      #addendum {
+/*        display:hide;
+*/      }
+
+    </style>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<!--
+<div class="flashes">
+    {% for message in get_flashed_messages() %}
+    <h3>{{ message }}</h3>
+    {% endfor %}
+</div>-->
+
+<!--<h2>Encode Movements for Video {{ num }}</h2>-->
+<h3>Watch the video and press the "." key each time you see the end of a movement.</h3><h3>Then adjust the times by dragging endpoints and fill out the fields for each movement.</h3>
+<vid></vid>
+<form method="POST">
+<!-- just to display all potential errors -->
+{% if form.errors %}
+    <ul class="errors">
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <li>{{ form[field_name].label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endif %}
+
+    <div data-toggle="fieldset" id="phone-fieldset">
+         <h3>Movements</h3>
+        <table>
+            <tr>
+                <th>Start Time (s)</th>
+                <th>End Time (s)</th>
+                <th>Quality</th>
+                <th>Emotion</th>
+                <th>Body Parts Involved</th>
+                <th></th>
+            </tr>
+            {% for segment in form.segments %}
+                <tr data-toggle="fieldset-entry">
+                    <td>{{ segment.start_time }}</td>
+                    <td>{{ segment.end_time }}</td>
+                    <td>{{ segment.laban_effort }}</td>
+                    <td>{{ segment.emotion }}</td>
+                    <td>{{ segment.body }}</td>
+                    <td><button type="button" data-toggle="fieldset-remove-row" id="phone-{{loop.index0}}-remove">- Remove</button></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <!--<button type="button" data-toggle="fieldset-add-row"
+                                          data-target="#phone-fieldset">+ Add Movement</button>-->
+    </div>
+    <div id='addendum'>
+      <p><input id="segmentsdone" type="submit" value="Finished"><span id="instruct"></span></p>
+    
+    </div>
+    {{ form.hidden_tag() }}
+
+
+<!--<h5> <a href="{{ url_for('get_user') }}">Home</a> </h5>-->
+
+<!--<p id='submit_button'>{{ form.submit }}</p>-->
+</form>
+
+
+<script src="{{ url_for("static", filename="js/page.js") }}"></script>
+<script>
+//console.log({{choice}});
+if ({{ choice }}){
+  $('#segmentsdone').click(function(){
+      $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}{{ form.complete }}</p>');
+  });
+} else {
+  $('#segmentsdone').click(function(){
+      $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}</p>');
+  });
+}
+$('#segmentsdone').mouseover(function(){
+    //console.log('hovering');
+    var instruct = '  Wait! Are you finished adding movements?';
+    $('#instruct').html(instruct);
+});
+$('#segmentsdone').mouseleave(function(){
+    //console.log('not hovering');
+    var instruct = '';
+    $('#instruct').html(instruct);
+});
+
+
+var vid;
+var duration = {{ duration }};
+var markings = [];
+var segments = [];
+var drag = false;
+var dragWhich;
+var changefield;
+var segmentIndex=1;
+
+function setup() {
+  vid = createVideo('{{ this_video }}');
+  vid.show();
+  vid.showControls();
+  vid.volume(0);
+  vid.size(600,400);
+  vid.position(40, 220);
+  //console.log(vid.position().y);
+  //console.log(vid.size());
+  createCanvas(600,20);      
+  
+  segments.push(new Segment(0));           
+}
+
+function draw() {
+  background(255);
+  drawTimeline();
+  for (var i=1; i<segments.length;i++){
+    segments[i].drawSegment();
+  }
+  if (drag){
+    if (dragWhich==0){
+      var newTime = Math.round(segments[drag].dragStart(segments[drag-1].end.xPos)*100)/100;
+      changefield.val(newTime);
+    } else {
+      if (drag<segments.length-1){
+        var newTime = Math.round(segments[drag].dragEnd(segments[drag+1].start.xPos)*100)/100;
+      } else {
+        var newTime = Math.round(segments[drag].dragEnd(timeTransform(duration))*100)/100;
+      }
+      changefield.val(newTime);
+    }
+  }
+  //console.log({{num}},vid.duration());
+}
+
+function drawTimeline(){
+  stroke(157,157,157);
+  strokeWeight(2);
+  line(108,9,412,9);
+  strokeWeight(6);
+  line(timeTransform(0),7,timeTransform(0),13);
+  line(timeTransform(duration),7,timeTransform(duration),13);
+}
+
+function timeTransform(time){
+  var fraction = time/duration;
+  var posTime = 108 + fraction*(412-108);
+  return posTime;
+}
+function inverseTransform(xPos){
+  var fraction = duration/(412-108);
+  var time = fraction*(xPos-108);
+  return time;
+}
+
+function Marking(time){
+  this.time=time;
+  this.xPos=timeTransform(time);
+
+  this.dragMarking=function(bound0,bound1){
+    if (mouseX>=bound0&&mouseX<=bound1){
+      this.xPos=mouseX;
+    } else if (mouseX<bound0){
+      this.xPos=bound0;
+    } else {
+      this.xPos=bound1;
+    }
+    this.time=inverseTransform(this.xPos);
+    return this.time;
+  };
+
+  this.drawMarking=function(){
+    strokeWeight(6);
+    line(this.xPos,7,this.xPos,13);
+  };
+
+}
+
+function Segment(time){
+  if (time-1>0){
+    this.start = new Marking(time-1);
+  } else {
+    this.start = new Marking(0.0+0.1-0.1);
+  }
+  this.end = new Marking(time);
+  this.index = segmentIndex;
+  this.end_time = this.end.time;
+  //console.log("added index",segmentIndex);
+
+  this.drawSegment=function(){
+    stroke(0,255,0);
+    this.start.drawMarking();
+    stroke(255,0,0);
+    this.end.drawMarking();
+    stroke('#1474cd');
+    strokeWeight(4);
+    line(this.start.xPos,9,this.end.xPos,9);
+  };
+
+  this.dragStart=function(bound0){
+    return this.start.dragMarking(bound0,this.end.xPos);
+  };
+
+  this.dragEnd=function(bound1){
+    end_time = this.end.dragMarking(this.start.xPos,bound1);
+    this.end_time = end_time;
+    return end_time;
+  };
+}
+
+function mousePressed(){
+  for (var i=1; i<segments.length;i++){
+    if (mouseX<=(segments[i].start.xPos+3)&&mouseX>=(segments[i].start.xPos-3)&&mouseY<=13&&mouseY>=7){
+      drag = i;
+      dragWhich = 0;
+      //console.log("drag",drag);
+      changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+segments[drag].index+"]").find(":input[name='segments-"+segments[drag].index+"-start_time']");
+    }
+    if (mouseX<=(segments[i].end.xPos+3)&&mouseX>=(segments[i].end.xPos-3)&&mouseY<=13&&mouseY>=7){
+      drag = i;
+      dragWhich = 1;
+      //console.log("drag",drag);
+      changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+segments[drag].index+"]").find(":input[name='segments-"+segments[drag].index+"-end_time']");
+    }
+  }
+}
+
+function mouseReleased(){
+  drag = false;
+}
+
+// function mousePressed(){
+//   for (var i=2; i<markings.length;i++){
+//     //console.log(markings[i]);
+//     if (mouseX<=(markings[i].xPos+3)&&mouseX>=(markings[i].xPos-3)&&mouseY<=13&&mouseY>=7){
+//       drag = i;
+//       $("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").each(function() {
+//          if ($(this).attr('data-id')==drag-2){
+//           $(this).find(":input").each(function() {
+//               if ($(this).attr('name').includes('end_time')){
+//                   changefield=$(this);
+//               }
+//           });
+//         }
+//       });
+//     }
+//   }
+// }
+
+// function mouseReleased(){
+//   drag = false;
+// }
+
+ 
+</script>
+<script src="static/js/p5.js" type="text/javascript"></script>
+<script src="static/js/p5.dom.js" type="text/javascript"></script>
+{% endblock %}
+</body>
+</html>

@@ -8,4 +8,4 @@ def prep_db():
 from app import app
 from app import db
 prep_db()
-app.run(debug=True)
+app.run(debug=False)

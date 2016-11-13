@@ -6,15 +6,15 @@ $(function() {
         $this.find("button[data-toggle=fieldset-add-row]").click(function() {
             //var fieldthis = $(this);
             var target = $($(this).data("target"));
-            console.log(target);
+            //console.log(target);
             var oldrow = target.find("[data-toggle=fieldset-entry]:last");
             var row = oldrow.clone(true, true);
-            console.log(row.find(":input")[0]);
+            //console.log(row.find(":input")[0]);
             var elem_id = row.find(":input")[0].id;
             var elem_num = parseInt(elem_id.replace(/.*-(\d{1,4})-.*/m, '$1')) + 1;
             row.attr('data-id', elem_num);
             row.find(":input").each(function() {
-                console.log(this);
+                //console.log(this);
                 var id = $(this).attr('id').replace('-' + (elem_num - 1) + '-', '-' + (elem_num) + '-');
                 $(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
             });
@@ -22,9 +22,9 @@ $(function() {
         }); 
 
         $(window).keypress(function(e) {
-            console.log(e.keyCode);
+            //console.log(e.keyCode);
             if (e.keyCode == 46) {
-                console.log('Space pressed');
+                //console.log('Space pressed');
                 time = precise_round(vid.time(),2);
                 if (time-1 > 0){
                     prev_time = precise_round(time-1,2);
@@ -36,33 +36,33 @@ $(function() {
                 segments.sort(function(a, b){
                     return a.end_time > b.end_time;
                 });
-                console.log("next index",segmentIndex);
+                //console.log("next index",segmentIndex);
                 //markings.sort();
-                console.log("Added");
+                //console.log("Added");
                 var target = $($this.find("button[data-toggle=fieldset-add-row]").data("target"));
-                console.log("target",target);
+                //console.log("target",target);
                 var oldrow = target.find("[data-toggle=fieldset-entry]:last");
-                console.log("id",oldrow.find(":input")[0].id);
+                //console.log("id",oldrow.find(":input")[0].id);
                 var row = oldrow.clone(true, true);
-                console.log(row.find(":input")[0]);
+                //console.log(row.find(":input")[0]);
                 var elem_id = row.find(":input")[0].id;
                 var elem_num = parseInt(elem_id.replace(/.*-(\d{1,4})-.*/m, '$1')) + 1;
                 row.attr('data-id', elem_num);
                 row.find(":input").each(function() {
                     //console.log(this.id);
                     var id = $(this).attr('id').replace('-' + (elem_num - 1) + '-', '-' + (elem_num) + '-');
-                    console.log(id);
+                    //console.log(id);
                     // YOU MIGHT NEED THIS LINE!
                     //$(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
                     if ($(this).attr('name').includes('start_time')){
                         $(this).attr('name', id).attr('id', id).val(prev_time).removeAttr("checked");
-                        console.log($(this).attr('name'));
+                        //console.log($(this).attr('name'));
                     } else if ($(this).attr('name').includes('end_time')){
                         $(this).attr('name', id).attr('id', id).val(time).removeAttr("checked");
-                        console.log($(this).attr('name'));
+                        //console.log($(this).attr('name'));
                     } else {
                         $(this).attr('name', id).attr('id', id).val('').removeAttr("checked");
-                        console.log($(this).attr('name'));
+                        //console.log($(this).attr('name'));
                     }
                 });
                 oldrow.after(row);
@@ -120,13 +120,13 @@ $(function() {
         $this.find("button[data-toggle=fieldset-remove-row]").click(function() {
             if($this.find("[data-toggle=fieldset-entry]").length > 1) {
                 var thisRow = $(this).closest("[data-toggle=fieldset-entry]");
-                console.log("removing");
+                //console.log("removing");
                 var removeTime = thisRow.find(':input').find('end_time').prevObject[1].value;
                 //var index = segments.indexOf(Number(removeTime));
                 var index = segments.map(function(e) { return e.index; }).indexOf(int(thisRow.attr('data-id')));
-                console.log("index remove",index);
+                //console.log("index remove",index);
                 //var index=int(thisRow.attr('data-id'));
-                console.log(index);
+                //console.log(index);
                 if(index!=-1){
                     segments.splice(index, 1);
                 }

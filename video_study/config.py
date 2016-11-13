@@ -11,4 +11,4 @@ SQLALCHEMY_ECHO = True
 SECRET_KEY = "the SECRET"
 WTF_CSRF_ENABLED = True
 # Disable debugging
-DEBUG = True
+DEBUG = False

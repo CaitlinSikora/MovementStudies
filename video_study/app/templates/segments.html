@@ -93,7 +93,7 @@
 
 <script src="{{ url_for("static", filename="js/page.js") }}"></script>
 <script>
-console.log({{choice}});
+//console.log({{choice}});
 if ({{ choice }}){
   $('#segmentsdone').click(function(){
       $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}{{ form.complete }}</p>');
@@ -104,12 +104,12 @@ if ({{ choice }}){
   });
 }
 $('#segmentsdone').mouseover(function(){
-    console.log('hovering');
+    //console.log('hovering');
     var instruct = '  Wait! Are you finished adding movements?';
     $('#instruct').html(instruct);
 });
 $('#segmentsdone').mouseleave(function(){
-    console.log('not hovering');
+    //console.log('not hovering');
     var instruct = '';
     $('#instruct').html(instruct);
 });
@@ -131,8 +131,8 @@ function setup() {
   vid.volume(0);
   vid.size(600,400);
   vid.position(40, 220);
-  console.log(vid.position().y);
-  console.log(vid.size());
+  //console.log(vid.position().y);
+  //console.log(vid.size());
   createCanvas(600,20);      
   
   segments.push(new Segment(0));           
@@ -157,7 +157,7 @@ function draw() {
       changefield.val(newTime);
     }
   }
-  console.log({{num}},vid.duration());
+  //console.log({{num}},vid.duration());
 }
 
 function drawTimeline(){
@@ -212,7 +212,7 @@ function Segment(time){
   this.end = new Marking(time);
   this.index = segmentIndex;
   this.end_time = this.end.time;
-  console.log("added index",segmentIndex);
+  //console.log("added index",segmentIndex);
 
   this.drawSegment=function(){
     stroke(0,255,0);
@@ -240,13 +240,13 @@ function mousePressed(){
     if (mouseX<=(segments[i].start.xPos+3)&&mouseX>=(segments[i].start.xPos-3)&&mouseY<=13&&mouseY>=7){
       drag = i;
       dragWhich = 0;
-      console.log("drag",drag);
+      //console.log("drag",drag);
       changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+segments[drag].index+"]").find(":input[name='segments-"+segments[drag].index+"-start_time']");
     }
     if (mouseX<=(segments[i].end.xPos+3)&&mouseX>=(segments[i].end.xPos-3)&&mouseY<=13&&mouseY>=7){
       drag = i;
       dragWhich = 1;
-      console.log("drag",drag);
+      //console.log("drag",drag);
       changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+segments[drag].index+"]").find(":input[name='segments-"+segments[drag].index+"-end_time']");
     }
   }

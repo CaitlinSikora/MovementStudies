@@ -5,25 +5,25 @@ from .forms import UserForm, SegmentForm, CombinedForm, User, Segment, Video
 import random
 
 videos = [#'static/blurredVideos/video1.mov',
-'static/blurredVideos/video2.mov',
+'static/blurredVideos/video2.mp4',
 #'static/blurredVideos/video3.mov',
-'static/blurredVideos/video4.mov',
-'static/blurredVideos/video5.mov',
-'static/blurredVideos/video6.mov']
+'static/blurredVideos/video4.mp4',
+'static/blurredVideos/video5.mp4',
+'static/blurredVideos/video6.mp4']
 
-mocapVideos = ['static/mocapVideos/AlisonAngryClip.mov',
-'static/mocapVideos/EdwinContentClip.mov',
-'static/mocapVideos/AlisonJoyfulClip.mov',
-'static/mocapVideos/EdwinSadClip.mov',
-'static/mocapVideos/AlisonContentClip.mov',
-'static/mocapVideos/EdwinAngryClip.mov',
-'static/mocapVideos/AlisonSadClip.mov',
-'static/mocapVideos/EdwinJoyfulClip.mov']
+mocapVideos = ['static/mocapVideos/AlisonAngryClip.mp4',
+'static/mocapVideos/EdwinContentClip.mp4',
+'static/mocapVideos/AlisonJoyfulClip.mp4',
+'static/mocapVideos/EdwinSadClip.mp4',
+'static/mocapVideos/AlisonContentClip.mp4',
+'static/mocapVideos/EdwinAngryClip.mp4',
+'static/mocapVideos/AlisonSadClip.mp4',
+'static/mocapVideos/EdwinJoyfulClip.mp4']
 
 #durations = [25.088,33.976289,34.416667,25.68127,21.182211,24.4]
-durations = [33.976289,25.68127,21.182211,24.4]
+durations = [29.504,25.301333,20.309333,22.378667]
 
-moDurations = [31.8,32.633333,39.1,35.633333,44.566667,32.833333,33.966667,33.7]
+moDurations = [31.296,29.290667,35.093333,31.445333,39.68,30.08,29.290667,29.482667]
 
 num = 0
 moNum = 0
@@ -170,7 +170,7 @@ def moVid2():
                 return redirect(url_for('vid2'))
             else:
                 return redirect(url_for('moVid2'))
-    return render_template('segments.html', form=form, num=moNum+1, this_video=mocapVideos[moNum+1], duration=moDurations[moNum+1],choice=1)
+    return render_template('segments.html', form=form, num=moNum+1, this_video=mocapVideos[moNum], duration=moDurations[moNum],choice=1)
 
 
 @app.route('/thanks', methods=['GET', 'POST'])

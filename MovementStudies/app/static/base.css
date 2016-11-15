@@ -25,7 +25,16 @@
 h1 {
     padding:5px 0;
 }
+h2 {
+    padding:0px;
+}
+h3 {
+    padding:0px;
+}
+h4 {
+    padding:2px;
+}
 
 p {
-    padding:7px 0;
+    padding:5px 0;
 }

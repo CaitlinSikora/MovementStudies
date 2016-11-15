@@ -5,20 +5,20 @@ from .forms import UserForm, SegmentForm, CombinedForm, User, Segment, Video
 import random
 
 videos = [#'static/blurredVideos/video1.mov',
-'static/blurredVideos/video2.mov',
+'static/blurredVideos/video2.mp4',
 #'static/blurredVideos/video3.mov',
-'static/blurredVideos/video4.mov',
-'static/blurredVideos/video5.mov',
-'static/blurredVideos/video6.mov']
+'static/blurredVideos/video4.mp4',
+'static/blurredVideos/video5.mp4',
+'static/blurredVideos/video6.mp4']
 
-mocapVideos = ['static/mocapVideos/AlisonAngryClip.mov',
-'static/mocapVideos/EdwinContentClip.mov',
-'static/mocapVideos/AlisonJoyfulClip.mov',
-'static/mocapVideos/EdwinSadClip.mov',
-'static/mocapVideos/AlisonContentClip.mov',
-'static/mocapVideos/EdwinAngryClip.mov',
-'static/mocapVideos/AlisonSadClip.mov',
-'static/mocapVideos/EdwinJoyfulClip.mov']
+mocapVideos = ['static/mocapVideos/AlisonAngryClip.mp4',
+'static/mocapVideos/EdwinContentClip.mp4',
+'static/mocapVideos/AlisonJoyfulClip.mp4',
+'static/mocapVideos/EdwinSadClip.mp4',
+'static/mocapVideos/AlisonContentClip.mp4',
+'static/mocapVideos/EdwinAngryClip.mp4',
+'static/mocapVideos/AlisonSadClip.mp4',
+'static/mocapVideos/EdwinJoyfulClip.mp4']
 
 #durations = [25.088,33.976289,34.416667,25.68127,21.182211,24.4]
 durations = [29.504,25.301333,20.309333,22.378667]

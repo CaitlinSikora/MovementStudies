@@ -101,7 +101,7 @@ if ({{ choice }}){
   });
 } else {
   $('#segmentsdone').click(function(){
-      $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>Overall, how positive/negative are the emotions expressed?</br>{{ form.valence }}</p><p>Overall, how aroused/excited is the person in the video?</br>{{ form.arousal }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}</p>');
+      $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>Overall, how positive/negative are the emotions expressed?</br>{{ form.valence }}<p></p>Overall, how aroused/excited is the person in the video?</br>{{ form.arousal }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}</p>');
   });
 }
 $('#segmentsdone').mouseover(function(){
@@ -141,7 +141,7 @@ function setup() {
 
 function draw() {
   background(255);
-  drawTimeline();
+  drawTimeline(108,549);
   for (var i=1; i<segments.length;i++){
     segments[i].drawSegment();
   }
@@ -158,13 +158,13 @@ function draw() {
       changefield.val(newTime);
     }
   }
-  //console.log({{num}},vid.duration(),'{{this_video}}');
+  console.log({{num}},vid.duration(),'{{this_video}}');
 }
 
-function drawTimeline(){
+function drawTimeline(x0,x1){
   stroke(157,157,157);
   strokeWeight(2);
-  line(108,9,412,9);
+  line(x0,9,x1,9);
   strokeWeight(6);
   line(timeTransform(0),7,timeTransform(0),13);
   line(timeTransform(duration),7,timeTransform(duration),13);
@@ -172,11 +172,11 @@ function drawTimeline(){
 
 function timeTransform(time){
   var fraction = time/duration;
-  var posTime = 108 + fraction*(412-108);
+  var posTime = 108 + fraction*(549-108);
   return posTime;
 }
 function inverseTransform(xPos){
-  var fraction = duration/(412-108);
+  var fraction = duration/(549-108);
   var time = fraction*(xPos-108);
   return time;
 }

@@ -67,7 +67,7 @@ class CombinedForm(Form):
     complete = SubmitField('Complete Survey')
     submit = SubmitField('Do Another Video')
     overall = StringField('Overall Interpretation', validators=[DataRequired()])
-    reason = StringField('Explanation', validators=[DataRequired()])
+    reason = StringField('Explanation')
     valence = SelectField(u'Positive/Negative', choices = [(-6,'Select'),('-5','-5'),('-4','-4'),('-3','-3'),('-2','-2'),('-1','-1'),('0','Neutral'),('1','1'),('2','2'),('3','3'),('4','4'),('5','5')], validators = [DataRequired()], default=(-6, 'Select'))
     arousal = SelectField(u'Arousal Level', choices = [(0,'Select'),('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7'),('8','8'),('9','9'),('10','10')], validators = [DataRequired()], default=(0, 'Select'))
 

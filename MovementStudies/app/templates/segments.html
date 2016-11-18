@@ -48,12 +48,12 @@
 <form method="POST">
 <!-- just to display all potential errors -->
 {% if form.errors %}
-    <ul class="errors">
-        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+    <ul class="errors">Hey there! You missed a few fields. Please fill them out and submit again. Thanks! </br>
+        <!--{% for field_name, field_errors in form.errors|dictsort if field_errors %}
             {% for error in field_errors %}
-                <li>{{ form[field_name].label }}: {{ error }}</li>
+                <li>{{ error }}</li>
             {% endfor %}
-        {% endfor %}
+        {% endfor %}-->
     </ul>
 {% endif %}
 
@@ -106,6 +106,15 @@ if ({{ choice }}){
       $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>Overall, how positive/negative are the emotions expressed?</br>{{ form.valence }}<p></p>Overall, how aroused/excited is the person in the video?</br>{{ form.arousal }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}</p>');
   });
 }
+
+{% if form.errors %}
+  if ({{ choice }}){
+    $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>Overall, how positive/negative are the emotions expressed?</br>{{ form.valence }}</p><p>Overall, how aroused/excited is the person in the video?</br>{{ form.arousal }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}{{ form.complete }}</p>');
+  } else {
+        $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>Overall, how positive/negative are the emotions expressed?</br>{{ form.valence }}<p></p>Overall, how aroused/excited is the person in the video?</br>{{ form.arousal }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}</p>');
+      }
+{% endif %}
+
 $('#segmentsdone').mouseover(function(){
     //console.log('hovering');
     var instruct = '  Wait! Are you finished adding movements?';

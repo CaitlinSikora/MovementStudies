@@ -25,6 +25,9 @@
       #addendum {
 /*        display:hide;
 */      }
+      #changevid {
+        margin-left:360px;
+      }
 
     </style>
 </head>
@@ -39,8 +42,8 @@
 </div>-->
 
 <!--<h2>Encode Movements for Video {{ num }}</h2>-->
-<h4>Watch the video and press <img src="static/key.png" height="18"> each time you see the end of a movement.</br>Then adjust the times by dragging endpoints and fill out the fields for each movement.</h4>
-<h2>Press <img src="static/key.png" height="26"> to add a segment.  Drag segment endpoints to adjust times.</h2>
+<h4>Watch the video and press and hold down the <img src="static/key.png" height="18"> key for the duration of each movement.</br>Then, adjust the times by dragging endpoints and fill out the fields for each movement.</h4>
+<h2>Press and hold <img src="static/key.png" height="26"> to add a segment.  Drag segment endpoints to adjust times.</h2>
 <vid></vid>
 <form method="POST">
 <!-- just to display all potential errors -->
@@ -55,7 +58,7 @@
 {% endif %}
 
     <div data-toggle="fieldset" id="phone-fieldset">
-         <h3>Movement Segments</h3>
+         <h3>Movement Segments <input type="button" id="changevid" onclick="window.location.reload()" value="I've already encoded this video" /></h3>
         <table>
             <tr>
                 <th>Start Time (s)</th>
@@ -92,7 +95,6 @@
 </form>
 
 
-<script src="{{ url_for("static", filename="js/page.js") }}"></script>
 <script>
 //console.log({{choice}});
 if ({{ choice }}){
@@ -115,172 +117,12 @@ $('#segmentsdone').mouseleave(function(){
     $('#instruct').html(instruct);
 });
 
-
-var vid;
+var vidname = '{{ this_video }}';
 var duration = {{ duration }};
-var markings = [];
-var segments = [];
-var drag = false;
-var dragWhich;
-var changefield;
-var segmentIndex=1;
-
-function setup() {
-  vid = createVideo('{{ this_video }}');
-  vid.show();
-  vid.showControls();
-  vid.volume(0);
-  vid.size(600,400);
-  vid.position(40, 220);
-  //console.log(vid.position().y);
-  //console.log(vid.size());
-  createCanvas(600,20);      
-  
-  segments.push(new Segment(0));           
-}
-
-function draw() {
-  background(255);
-  drawTimeline(108,549);
-  for (var i=1; i<segments.length;i++){
-    segments[i].drawSegment();
-  }
-  if (drag){
-    if (dragWhich==0){
-      var newTime = Math.round(segments[drag].dragStart(segments[drag-1].end.xPos)*100)/100;
-      changefield.val(newTime);
-    } else {
-      if (drag<segments.length-1){
-        var newTime = Math.round(segments[drag].dragEnd(segments[drag+1].start.xPos)*100)/100;
-      } else {
-        var newTime = Math.round(segments[drag].dragEnd(timeTransform(duration))*100)/100;
-      }
-      changefield.val(newTime);
-    }
-  }
-  console.log({{num}},vid.duration(),'{{this_video}}');
-}
-
-function drawTimeline(x0,x1){
-  stroke(157,157,157);
-  strokeWeight(2);
-  line(x0,9,x1,9);
-  strokeWeight(6);
-  line(timeTransform(0),7,timeTransform(0),13);
-  line(timeTransform(duration),7,timeTransform(duration),13);
-}
-
-function timeTransform(time){
-  var fraction = time/duration;
-  var posTime = 108 + fraction*(549-108);
-  return posTime;
-}
-function inverseTransform(xPos){
-  var fraction = duration/(549-108);
-  var time = fraction*(xPos-108);
-  return time;
-}
-
-function Marking(time){
-  this.time=time;
-  this.xPos=timeTransform(time);
-
-  this.dragMarking=function(bound0,bound1){
-    if (mouseX>=bound0&&mouseX<=bound1){
-      this.xPos=mouseX;
-    } else if (mouseX<bound0){
-      this.xPos=bound0;
-    } else {
-      this.xPos=bound1;
-    }
-    this.time=inverseTransform(this.xPos);
-    return this.time;
-  };
-
-  this.drawMarking=function(){
-    strokeWeight(6);
-    line(this.xPos,7,this.xPos,13);
-  };
-
-}
-
-function Segment(time){
-  if (time-1>0){
-    this.start = new Marking(time-1);
-  } else {
-    this.start = new Marking(0.0+0.1-0.1);
-  }
-  this.end = new Marking(time);
-  this.index = segmentIndex;
-  this.end_time = this.end.time;
-  //console.log("added index",segmentIndex);
-
-  this.drawSegment=function(){
-    stroke(0,255,0);
-    this.start.drawMarking();
-    stroke(255,0,0);
-    this.end.drawMarking();
-    stroke('#1474cd');
-    strokeWeight(4);
-    line(this.start.xPos,9,this.end.xPos,9);
-  };
-
-  this.dragStart=function(bound0){
-    return this.start.dragMarking(bound0,this.end.xPos);
-  };
-
-  this.dragEnd=function(bound1){
-    end_time = this.end.dragMarking(this.start.xPos,bound1);
-    this.end_time = end_time;
-    return end_time;
-  };
-}
-
-function mousePressed(){
-  for (var i=1; i<segments.length;i++){
-    if (mouseX<=(segments[i].start.xPos+3)&&mouseX>=(segments[i].start.xPos-3)&&mouseY<=13&&mouseY>=7){
-      drag = i;
-      dragWhich = 0;
-      //console.log("drag",drag);
-      changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+segments[drag].index+"]").find(":input[name='segments-"+segments[drag].index+"-start_time']");
-    }
-    if (mouseX<=(segments[i].end.xPos+3)&&mouseX>=(segments[i].end.xPos-3)&&mouseY<=13&&mouseY>=7){
-      drag = i;
-      dragWhich = 1;
-      //console.log("drag",drag);
-      changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+segments[drag].index+"]").find(":input[name='segments-"+segments[drag].index+"-end_time']");
-    }
-  }
-}
-
-function mouseReleased(){
-  drag = false;
-}
-
-// function mousePressed(){
-//   for (var i=2; i<markings.length;i++){
-//     //console.log(markings[i]);
-//     if (mouseX<=(markings[i].xPos+3)&&mouseX>=(markings[i].xPos-3)&&mouseY<=13&&mouseY>=7){
-//       drag = i;
-//       $("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").each(function() {
-//          if ($(this).attr('data-id')==drag-2){
-//           $(this).find(":input").each(function() {
-//               if ($(this).attr('name').includes('end_time')){
-//                   changefield=$(this);
-//               }
-//           });
-//         }
-//       });
-//     }
-//   }
-// }
-
-// function mouseReleased(){
-//   drag = false;
-// }
 
  
 </script>
+<script src="{{ url_for("static", filename="js/page.js") }}"></script>
 <script src="static/js/p5.js" type="text/javascript"></script>
 <script src="static/js/p5.dom.js" type="text/javascript"></script>
 {% endblock %}

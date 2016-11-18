@@ -127,12 +127,16 @@ var vid;
 var markings = [];
 var segments = [];
 var drag = false;
+var progress = false;
 var dragWhich;
 var changefield;
 var segmentIndex=1;
 
-function setup() {
+function preload() {
   vid = createVideo(vidname);
+}
+
+function setup() {
   vid.show();
   vid.showControls();
   vid.volume(0);
@@ -175,6 +179,10 @@ function draw() {
       changefield.val(newTime);
     }
   }
+  if (progress){
+    var newTime = segments[progress].progress();
+    changefield.val(newTime);
+  }
   //console.log({{num}},vid.duration(),'{{this_video}}');
 }
 
@@ -214,6 +222,11 @@ function Marking(time){
     return this.time;
   };
 
+  this.progMarking=function(new_time){
+    this.xPos=timeTransform(new_time);
+    return new_time;
+  };
+
   this.drawMarking=function(){
     strokeWeight(6);
     line(this.xPos,7,this.xPos,13);
@@ -247,6 +260,12 @@ function Segment(t1, t2){
     this.end_time = end_time;
     return end_time;
   };
+
+  this.progress=function(){
+    this.end_time = this.end.progMarking(precise_round(vid.time(),2));
+    console.log("progress",this.end_time);
+    return this.end_time;
+  };
 }
 
 function mousePressed(){
@@ -279,13 +298,13 @@ function mouseReleased(){
   drag = false;
 }
 
-function keyPressed() {
+function keyReleased() {
     // set the beginning time for the new segment
-    prev_time = precise_round(vid.time(),2);
+    progress = false;
 }
 
 // create the new field and segment
-function keyReleased() {
+function keyPressed() {
     //$("div[data-toggle=fieldset]").each(function() {
         var $this = $(this);
             //console.log(keyCode);
@@ -293,6 +312,8 @@ function keyReleased() {
             if (keyCode == 190) {
                 console.log('PERIOD OFF!');
                 time = precise_round(vid.time(),2);
+                prev_time = time;
+
                 // if (time-1 > 0){
                 //     prev_time = precise_round(time-1,2);
                 // } else {
@@ -301,8 +322,10 @@ function keyReleased() {
                 segments.push(new Segment(prev_time, time));
                 segmentIndex+=1;
                 segments.sort(function(a, b){
-                    return a.end_time > b.end_time;
+                    return a.start_time > b.start_time;
                 });
+                progress = segmentIndex-1;
+                console.log(progress);
                 //console.log("next index",segmentIndex);
                 //markings.sort();
                 //console.log("Added");
@@ -337,6 +360,7 @@ function keyReleased() {
                     oldrow.remove();
                     first = false;
                 }
+                changefield=$("div[data-toggle=fieldset]").find("[data-toggle=fieldset-entry]").filter("[data-id="+segments[progress].index+"]").find(":input[name='segments-"+segments[progress].index+"-end_time']");
             }
 
 

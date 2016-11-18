@@ -1,7 +1,8 @@
 from flask import render_template, flash, redirect, session, url_for
 from app import app
 from app import db
-from .forms import UserForm, SegmentForm, CombinedForm, User, Segment, Video
+from .forms import UserForm, SegmentForm, CombinedForm
+from .models import User, Segment, Video, Numbers
 import random
 
 videos = [#'static/blurredVideos/video1.mov',
@@ -24,9 +25,7 @@ mocapVideos = ['static/mocapVideos/AlisonAngryClip.mp4',
 durations = [29.504,25.301333,20.309333,22.378667]
 
 moDurations = [31.296,29.290667,35.093333,31.445333,39.68,30.08,29.290667,29.482667]
-
-num = 0
-moNum = 0
+# You will be presented with 3 short videos.
 
 @app.route('/', methods=['GET', 'POST'])
 def get_user():
@@ -50,7 +49,10 @@ def instruct():
 
 @app.route('/video', methods=['GET', 'POST'])
 def vid():
-    global num
+    #global num
+    numbers = Numbers.query.get(1)
+    num = numbers.num
+    print "NUM", num
     # always "blindly" load the user
     video = Video(user_name=session['user_name'],video=str(num+1))
     # video = Video.query.first()
@@ -66,11 +68,12 @@ def vid():
     if form.validate_on_submit():
         form.populate_obj(video)
         db.session.add(video)
-        db.session.commit()
         flash("Saved Changes")
         num += 1
-        print num
         num=num%len(videos)
+        numbers.num = num
+        db.session.commit()
+        print num
         if form.complete.data:
             return redirect(url_for('thanks'))
         else:
@@ -79,7 +82,10 @@ def vid():
 
 @app.route('/video2', methods=['GET', 'POST'])
 def vid2():
-    global num
+    #global num
+    numbers = Numbers.query.get(1)
+    num = numbers.num
+    print "NUM", num
     # always "blindly" load the user
     video = Video(user_name=session['user_name'],video=str(num+1))
     # video = Video.query.first()
@@ -95,11 +101,11 @@ def vid2():
     if form.validate_on_submit():
         form.populate_obj(video)
         db.session.add(video)
-        db.session.commit()
         flash("Saved Changes")
         num += 1
-        print num
         num=num%len(videos)
+        numbers.num = num
+        db.session.commit()
         if form.complete.data:
             return redirect(url_for('thanks'))
         else:
@@ -112,7 +118,10 @@ def vid2():
 
 @app.route('/moVideo', methods=['GET', 'POST'])
 def moVid():
-    global moNum
+    #global moNum
+    numbers = Numbers.query.get(1)
+    moNum = numbers.moNum
+    print "NUM", moNum
     # always "blindly" load the user
     video = Video(user_name=session['user_name'],video=str(moNum+1))
     # video = Video.query.first()
@@ -128,11 +137,12 @@ def moVid():
     if form.validate_on_submit():
         form.populate_obj(video)
         db.session.add(video)
-        db.session.commit()
         flash("Saved Changes")
         moNum += 1
+        moNum=moNum%len(videos)
+        numbers.moNum = moNum
+        db.session.commit()
         print moNum
-        moNum=moNum%len(mocapVideos)
         if form.complete.data:
             return redirect(url_for('thanks'))
         else:
@@ -141,7 +151,10 @@ def moVid():
 
 @app.route('/moVideo2', methods=['GET', 'POST'])
 def moVid2():
-    global moNum
+    #global moNum
+    numbers = Numbers.query.get(1)
+    moNum = numbers.moNum
+    print "NUM", moNum
     # always "blindly" load the user
     video = Video(user_name=session['user_name'],video=str(moNum+1))
     # video = Video.query.first()
@@ -157,11 +170,12 @@ def moVid2():
     if form.validate_on_submit():
         form.populate_obj(video)
         db.session.add(video)
-        db.session.commit()
         flash("Saved Changes")
         moNum += 1
+        moNum=moNum%len(videos)
+        numbers.moNum = moNum
+        db.session.commit()
         print moNum
-        moNum=moNum%len(mocapVideos)
         if form.complete.data:
             return redirect(url_for('thanks'))
         else:

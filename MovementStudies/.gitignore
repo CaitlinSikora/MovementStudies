@@ -1,0 +1,4 @@
+app/static/app.db
+config.py
+app/static/blurredVideos/*
+app/static/mocapVideos/*

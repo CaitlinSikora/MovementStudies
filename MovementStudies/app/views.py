@@ -5,12 +5,12 @@ from .forms import UserForm, SegmentForm, CombinedForm
 from .models import User, Segment, Video, Numbers
 import random
 
-videos = ['static/blurredVideos/video1.mp4',
-#'static/blurredVideos/video2.mov',
+videos = [#'static/blurredVideos/video1.mp4',
+'static/blurredVideos/video2.mp4',
 #'static/blurredVideos/video3.mov',
-'static/blurredVideos/video4.mov',
-'static/blurredVideos/video5.mov',
-'static/blurredVideos/video6.mov']
+'static/blurredVideos/video4.mp4',
+'static/blurredVideos/video5.mp4',
+'static/blurredVideos/video6.mp4']
 
 mocapVideos = ['static/mocapVideos/AlisonAngryClip.mp4',
 'static/mocapVideos/EdwinContentClip.mp4',

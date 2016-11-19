@@ -14,7 +14,7 @@
     <div class="contain_form">
         <h1>Instructions</h1>
         <p>Hi, {{ user }}. Thanks for your willingness to participate in this study.</p>
-            <p>You'll be asked to watch a few short videos in search of expressive movements. Please classify each movement with one of the following qualities from the drop-down menu:
+            <p>In this survey, you'll be asked to watch 3 short videos and label expressive movements. You will mark the timeline for each expressive movement you see. Then, you'll assign one of the following qualities to each movement from the drop down menu:
                 <table>
                     <tr>
                         <th>Slash</th>
@@ -27,11 +27,14 @@
                         <th>Float</th>
                     </tr>
                 </table>
-            <p>There are no wrong answers here. Trust your intuition. Then, fill out the rest of the form.</p>
+            <p>There are no wrong answers here. Trust your intuition. There are no wrong answers. Just use your best instincts. At this point, you'll be asked to enter the emotions being expressed and the body parts involved in each movement. When you have finished adding all of the movements you see, you'll answer a few quick questions about the overall video. Please fill out the form completely. The video below will demonstrate.</p>
+            <video src="static/blurredVideos/instructions.mp4" height=400 controls></video>
             <p>Data will be collected and analyzed privately for a thesis project at NYU Tandon School of Engineering. Participant data will not be shared.</p>
             <p>Do you understand the instructions and agree to participate?</p>
             <form action="{{ url_for('vid') }}">
-                <input type="submit" value="Agree" />
+                <input type="submit" value="Agree and Begin" />
             </form>
+
+            <p>If you have any questions, please email Caitlin at cas836@nyu.edu. Thanks again!</p>
     </div>
 {% endblock %}

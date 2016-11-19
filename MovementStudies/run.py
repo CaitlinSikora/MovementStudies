@@ -14,4 +14,4 @@ from app.models import Numbers
 
 if __name__ == '__main__':
 	prep_db()
-	app.run(debug=False)
+	app.run(debug=True)

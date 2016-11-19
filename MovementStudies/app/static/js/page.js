@@ -146,7 +146,7 @@ function setup() {
   //console.log(vid.size());
   createCanvas(600,20);      
   // start with a dummy segment to cap the beginning times
-  segments.push(new Segment(inverseTransform(102),inverseTransform(102)));           
+  segments.push(new Segment(inverseTransform(102),inverseTransform(102),0));           
 }
 
 function draw() {
@@ -162,14 +162,18 @@ function draw() {
   if (drag){
     // if marker is beginning marker
     if (dragWhich==0){
-      // move the marker  
+      // move the marker
+      //var index = segments.map(function(e) { return e.index; }).indexOf(drag-1);
+      //console.log("index",index,"drag",drag);
       var newTime = Math.round(segments[drag].dragStart(segments[drag-1].end.xPos+6)*100)/100;
       // update times in data fields
       changefield.val(newTime);
     } else {  // if it's an end marker
+      //console.log("index",index, "drag",drag);
     // if it's not the last end marker
       if (drag<segments.length-1){
         // move the marker
+        //var index = segments.map(function(e) { return e.index; }).indexOf(drag+1);
         var newTime = Math.round(segments[drag].dragEnd(segments[drag+1].start.xPos-6)*100)/100;
       } else {
         // move the marker
@@ -180,6 +184,7 @@ function draw() {
     }
   }
   if (progress){
+    console.log("progress",progress);
     var newTime = segments[progress].progress();
     changefield.val(newTime);
   }
@@ -234,7 +239,7 @@ function Marking(time){
 
 }
 
-function Segment(t1, t2){
+function Segment(t1, t2, segmentIndex){
   this.start = new Marking(t1);
   this.end = new Marking(t2);
   this.index = segmentIndex;
@@ -263,7 +268,7 @@ function Segment(t1, t2){
 
   this.progress=function(){
     this.end_time = this.end.progMarking(precise_round(vid.time(),2));
-    console.log("progress",this.end_time);
+    //console.log("progress",this.end_time);
     return this.end_time;
   };
 }
@@ -303,6 +308,24 @@ function keyReleased() {
     progress = false;
 }
 
+function insert(st_time) {
+  var loc = 0; 
+  for (var j=0; j < segments.length; j++){
+    if (segments[j].start.time>=st_time){
+        loc = j-1;
+        break;
+    } else {
+        loc = j;
+    }
+  }
+  console.log("loc",loc);
+  segments.splice(loc + 1, 0, new Segment(st_time, st_time, segmentIndex));
+  for (var i=0; i < segments.length; i++){
+  console.log("start",segments[i].start.time,"index",segments[i].index);
+  }
+  return ;
+}
+
 // create the new field and segment
 function keyPressed() {
     //$("div[data-toggle=fieldset]").each(function() {
@@ -310,7 +333,7 @@ function keyPressed() {
             //console.log(keyCode);
             //console.log(e.keyCode);
             if (keyCode == 190) {
-                console.log('PERIOD OFF!');
+                console.log('PERIOD ON!');
                 time = precise_round(vid.time(),2);
                 prev_time = time;
 
@@ -319,13 +342,16 @@ function keyPressed() {
                 // } else {
                 //     prev_time = 0;
                 // }
-                segments.push(new Segment(prev_time, time));
+                console.log("segmentIndex",segmentIndex);
+                //segments.push(new Segment(prev_time, time, segmentIndex));
+                insert(time);
+                progress = segments.map(function(e) { return e.index; }).indexOf(segmentIndex);
+                console.log("numsegs",segments.length);
+                //console.log("progress",progress);
                 segmentIndex+=1;
-                segments.sort(function(a, b){
-                    return a.start_time > b.start_time;
-                });
-                progress = segmentIndex-1;
-                console.log(progress);
+                // segments.sort(function(a, b){
+                //     return a.start_time > b.start_time;
+                // });
                 //console.log("next index",segmentIndex);
                 //markings.sort();
                 //console.log("Added");

@@ -7,6 +7,7 @@ class Numbers(db.Model):
     index = db.Column(db.Integer(),primary_key=True)
     moNum = db.Column(db.Integer())
     num = db.Column(db.Integer())
+    
 class Video(db.Model):
     __tablename__ = 'videos'
     entry = db.Column(db.Integer(),primary_key=True)
@@ -35,3 +36,4 @@ class User(db.Model):
     age = db.Column(db.String(50))
     gender_id = db.Column(db.String(50))
     country = db.Column(db.String(50))
+    movementyears = db.Column(db.String(50))

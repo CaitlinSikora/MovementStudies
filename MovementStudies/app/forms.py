@@ -21,6 +21,7 @@ class UserForm(Form):
     age = StringField('Age')
     gender_id = StringField('Gender Identity')
     country = StringField('Birth Country')
+    movementyears = StringField('Years Studied Movement')
 
 class SegmentForm(NoCsrfForm):
     # this forms is never exposed so we can use the non CSRF version

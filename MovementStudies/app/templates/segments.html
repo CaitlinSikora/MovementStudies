@@ -25,7 +25,7 @@
       #addendum {
 /*        display:hide;
 */      }
-      #changevid {
+      #add-button {
         margin-left:360px;
       }
 
@@ -58,7 +58,8 @@
 {% endif %}
 
     <div data-toggle="fieldset" id="phone-fieldset">
-         <h3>Movement Segments <input type="button" id="changevid" onclick="window.location.reload()" value="I've already encoded this video" /></h3>
+         <h3>Movement Segments <button type="button" id="add-button" data-toggle="fieldset-add-row"
+                                          data-target="#phone-fieldset">Add Movement Manually</button></h3>
         <table>
             <tr>
                 <th>Start Time (s)</th>
@@ -75,7 +76,7 @@
                     <td>{{ segment.laban_effort }}</td>
                     <td>{{ segment.emotion }}</td>
                     <td>{{ segment.body }}</td>
-                    <td><button type="button" data-toggle="fieldset-remove-row" id="phone-{{loop.index0}}-remove">- Remove</button></td>
+                    <td><button type="button" data-toggle="fieldset-remove-row" id="phone-{{loop.index0}}-remove">Remove</button></td>
                 </tr>
             {% endfor %}
         </table>

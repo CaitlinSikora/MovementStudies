@@ -14,7 +14,7 @@
         left:40px;
         z-index:100;
       } 
-      vid {
+      video {
         position:relative;
         z-index:-1;
       }
@@ -44,7 +44,8 @@
 <!--<h2>Encode Movements for Video  {{ num }}</h2>-->
 <h4>Once the video has loaded, press and hold down the <img src="static/key.png" height="18"> key for the duration of each movement you see.</br>Note: Movement segments may be out of order. This tool is in beta, so please try to manually adjust times if the code breaks.</h4>
 <h2>Press and hold <img src="static/key.png" height="26"> to add a segment.  Drag segment endpoints to adjust times.</h2>
-<vid></vid>
+<!--<video id="video" controls preload="auto" height="400" canplaythrough='true'></video>-->
+
 <form method="POST">
 <!-- just to display all potential errors -->
 {% if form.errors %}

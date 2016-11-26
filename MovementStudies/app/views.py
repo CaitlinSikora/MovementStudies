@@ -6,7 +6,7 @@ from .models import User, Segment, Video, Numbers
 import random
 
 videos = [#'static/blurredVideos/video1.mp4',
-'static/blurredVideos/video2.mp4',
+'static/blurredVideos/video1.mp4',
 #'static/blurredVideos/video3.mov',
 'static/blurredVideos/video4.mp4',
 'static/blurredVideos/video5.mp4',
@@ -123,7 +123,7 @@ def moVid():
     moNum = numbers.moNum
     print "NUM", moNum
     # always "blindly" load the user
-    video = Video(user_name=session['user_name'],video=str(moNum+1))
+    video = Video(user_name=session['user_name'],video=str(moNum+5))
     # video = Video.query.first()
 
     # if User has no phones, provide an empty one so table is rendered
@@ -139,7 +139,7 @@ def moVid():
         db.session.add(video)
         flash("Saved Changes")
         moNum += 1
-        moNum=moNum%len(videos)
+        moNum=moNum%len(mocapVideos)
         numbers.moNum = moNum
         db.session.commit()
         print moNum
@@ -156,7 +156,7 @@ def moVid2():
     moNum = numbers.moNum
     print "NUM", moNum
     # always "blindly" load the user
-    video = Video(user_name=session['user_name'],video=str(moNum+1))
+    video = Video(user_name=session['user_name'],video=str(moNum+5))
     # video = Video.query.first()
 
     # if User has no phones, provide an empty one so table is rendered
@@ -172,7 +172,7 @@ def moVid2():
         db.session.add(video)
         flash("Saved Changes")
         moNum += 1
-        moNum=moNum%len(videos)
+        moNum=moNum%len(mocapVideos)
         numbers.moNum = moNum
         db.session.commit()
         print moNum

@@ -122,7 +122,6 @@ function precise_round(value, decPlaces){
 
 // p5.js shit
 
-
 var vid;
 var markings = [];
 var segments = [];
@@ -131,10 +130,31 @@ var progress = false;
 var dragWhich;
 var changefield;
 var segmentIndex=1;
+var video;
 
 function preload() {
-  vid = createVideo(vidname);
+  console.log("Loading video into element");
+  vid = createVideo(video);
 }
+
+console.log("Downloading video...hellip;Please wait...")
+var xhr = new XMLHttpRequest();
+xhr.open('GET', vidname, true);
+xhr.responseType = 'blob';
+xhr.onload = function(e) {
+  if (this.status == 200) {
+    console.log("got it");
+    var myBlob = this.response;
+    video = (window.webkitURL ? webkitURL : URL).createObjectURL(myBlob);
+    // myBlob is now the blob that the object URL pointed to.
+    //vid = document.getElementById("video");
+    vid.src = video;
+    // not needed if autoplay is set for the video element
+    // video.play()
+   }
+  }
+
+xhr.send();
 
 function setup() {
   vid.show();
@@ -395,8 +415,6 @@ function keyPressed() {
 
     //});
 }
-
-
 
 // function mousePressed(){
 //   for (var i=2; i<markings.length;i++){

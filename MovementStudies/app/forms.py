@@ -23,6 +23,9 @@ class UserForm(Form):
     country = StringField('Birth Country')
     movementyears = StringField('Years Studied Movement')
 
+class RenewForm(Form):
+    user_name = StringField('First and Last Names', validators=[DataRequired()])
+
 class SegmentForm(NoCsrfForm):
     # this forms is never exposed so we can use the non CSRF version
     start_time = StringField('Start Time', validators=[DataRequired(),Length(min=1, max=10)])
@@ -36,7 +39,7 @@ class CombinedForm(Form):
     # we must provide empth Phone() instances else populate_obj will fail
     segments = FieldList(FormField(SegmentForm, default=lambda: Segment()))
     complete = SubmitField('Complete Survey')
-    submit = SubmitField('Do Another Video')
+    submit = SubmitField('Submit and Continue')
     overall = StringField('Overall Interpretation', validators=[DataRequired()])
     reason = StringField('Explanation')
     valence = SelectField(u'Positive/Negative', choices = [(-6,'Select'),('-5','-5'),('-4','-4'),('-3','-3'),('-2','-2'),('-1','-1'),('0','Neutral'),('1','1'),('2','2'),('3','3'),('4','4'),('5','5')], validators = [DataRequired()], default=(-6, 'Select'))

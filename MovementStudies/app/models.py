@@ -37,3 +37,5 @@ class User(db.Model):
     gender_id = db.Column(db.String(50))
     country = db.Column(db.String(50))
     movementyears = db.Column(db.String(50))
+    numvideos = db.Column(db.Integer())
+    whichvideos = db.Column(db.String(50))

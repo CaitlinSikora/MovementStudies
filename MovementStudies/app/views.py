@@ -1,13 +1,11 @@
-from flask import render_template, flash, redirect, session, url_for
+from flask import render_template, flash, redirect, session, url_for, request
 from app import app
 from app import db
 from .forms import UserForm, SegmentForm, CombinedForm, RenewForm
 from .models import User, Segment, Video, Numbers
 import random
 
-videos = [#'static/blurredVideos/video1.mp4',
-'static/blurredVideos/video2.mp4',
-#'static/blurredVideos/video3.mov',
+videos = ['static/blurredVideos/video2.mp4',
 'static/blurredVideos/video4.mp4',
 'static/blurredVideos/video5.mp4',
 'static/blurredVideos/video6.mp4']
@@ -21,19 +19,15 @@ mocapVideos = ['static/mocapVideos/AlisonAngryClip.mp4',
 'static/mocapVideos/AlisonSadClip.mp4',
 'static/mocapVideos/EdwinJoyfulClip.mp4']
 
-#durations = [25.088,33.976289,34.416667,25.68127,21.182211,24.4]
 durations = [29.504,25.301333,20.309333,22.378667]
 
 moDurations = [31.296,29.290667,35.093333,31.445333,39.68,30.08,29.290667,29.482667]
-# You will be presented with 3 short videos.
 
 @app.route('/', methods=['GET', 'POST'])
 def get_user():
     user = User(user_name="name",numvideos=1,whichvideos="")
     form = UserForm()
     if form.validate_on_submit():
-        # flash('Data requested for business_name="%s", owner="%s", business_type="%s", location="%s"' %
-        #   (form.business_name.data, form.owner.data, form.business_type.data, form.location.data))
         session['user_name'] = form.user_name.data
         form.populate_obj(user)
         present = User.query.filter(User.user_name == session['user_name']).first()
@@ -51,7 +45,6 @@ def instruct():
 
 @app.route('/video', methods=['GET', 'POST'])
 def vid():
-    #global num
     user = User.query.filter(User.user_name == session['user_name']).first()
     if not user:
         return redirect(url_for('renew_user'))
@@ -75,14 +68,11 @@ def vid():
     user.whichvideos += str(num+1)+' '
 
     print "NUMBERS", "which", user.whichvideos, "usernum",user_num
-    # always "blindly" load the user
-    video = Video(user_name=session['user_name'],video=str(num+1))
-    # video = Video.query.first()
+    video = Video(user_name=session['user_name'],video=str(num+1))\
 
-    # if User has no phones, provide an empty one so table is rendered
+    # provide an empty segment so table is rendered
     if len(video.segments) == 0:
         video.segments = [Segment(start_time="0",end_time="10")]
-        # flash("empty Segment provided")
 
     # else: forms loaded through db relation
     form = CombinedForm(obj=video)
@@ -105,7 +95,6 @@ def vid():
 
 @app.route('/video2', methods=['GET', 'POST'])
 def vid2():
-    #global num
     user = User.query.filter(User.user_name == session['user_name']).first()
     if not user:
         return redirect(url_for('renew_user'))
@@ -128,16 +117,12 @@ def vid2():
     user.whichvideos += str(num+1)+' '
 
     print "NUMBERS", "which", user.whichvideos, "usernum",user_num
-    # always "blindly" load the user
     video = Video(user_name=session['user_name'],video=str(num+1))
-    # video = Video.query.first()
 
-    # if User has no phones, provide an empty one so table is rendered
+    # provide an empty segment so table is rendered
     if len(video.segments) == 0:
         video.segments = [Segment(start_time="0",end_time="10")]
-        # flash("empty Segment provided")
 
-    # else: forms loaded through db relation
     form = CombinedForm(obj=video)
 
     if form.validate_on_submit():
@@ -163,7 +148,6 @@ def vid2():
 
 @app.route('/moVideo', methods=['GET', 'POST'])
 def moVid():
-    #global moNum
     user = User.query.filter(User.user_name == session['user_name']).first()
     if not user:
         return redirect(url_for('renew_user'))
@@ -189,16 +173,11 @@ def moVid():
     user.whichvideos += str(moNum+5)+' '
 
     print "NUMBERS", "which", user.whichvideos,"usernum",user_num
-    # always "blindly" load the user
     video = Video(user_name=session['user_name'],video=str(moNum+5))
-    # video = Video.query.first()
 
-    # if User has no phones, provide an empty one so table is rendered
+    # provide an empty segment so table is rendered
     if len(video.segments) == 0:
         video.segments = [Segment(start_time="0",end_time="10")]
-        # flash("empty Segment provided")
-
-    # else: forms loaded through db relation
     form = CombinedForm(obj=video)
 
     if form.validate_on_submit():
@@ -220,7 +199,6 @@ def moVid():
 
 @app.route('/moVideo2', methods=['GET', 'POST'])
 def moVid2():
-    #global moNum
     user = User.query.filter(User.user_name == session['user_name']).first()
     if not user:
         return redirect(url_for('renew_user'))
@@ -245,16 +223,12 @@ def moVid2():
     user.whichvideos += str(moNum+5)+' '
     
     print "NUMBERS", "which", user.whichvideos,"usernum",user_num
-    # always "blindly" load the user
     video = Video(user_name=session['user_name'],video=str(moNum+5))
-    # video = Video.query.first()
 
-    # if User has no phones, provide an empty one so table is rendered
+    # provide an empty segment so table is rendered
     if len(video.segments) == 0:
         video.segments = [Segment(start_time="0",end_time="10")]
-        # flash("empty Segment provided")
 
-    # else: forms loaded through db relation
     form = CombinedForm(obj=video)
 
     if form.validate_on_submit():
@@ -289,8 +263,6 @@ def renew_user():
     user = User(user_name="name",numvideos=1,whichvideos="")
     form = RenewForm()
     if form.validate_on_submit():
-        # flash('Data requested for business_name="%s", owner="%s", business_type="%s", location="%s"' %
-        #   (form.business_name.data, form.owner.data, form.business_type.data, form.location.data))
         session['user_name'] = form.user_name.data
         form.populate_obj(user)
         present = User.query.filter(User.user_name == session['user_name']).first()
@@ -300,3 +272,14 @@ def renew_user():
         return redirect(url_for('instruct'))
     return render_template('renew.html',
                            form=form)
+
+@app.route('/results', methods=['GET', 'POST'])
+def results():
+    return render_template('results.html')
+
+@app.route('/segmentvis', methods=['GET', 'POST'])
+def segmentvis():
+    video = int(request.args.get('video'))
+    print video
+    return render_template('segmentvis.html',
+                           video=video)

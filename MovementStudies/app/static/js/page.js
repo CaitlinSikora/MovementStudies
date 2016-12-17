@@ -352,7 +352,7 @@ function keyPressed() {
         var $this = $(this);
             //console.log(keyCode);
             //console.log(e.keyCode);
-            if (keyCode == 190) {
+            if (keyCode == 220) {
                 console.log('PERIOD ON!');
                 time = precise_round(vid.time(),2);
                 prev_time = time;

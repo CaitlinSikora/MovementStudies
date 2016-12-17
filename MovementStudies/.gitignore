@@ -1,4 +1,5 @@
 app/static/app.db
+app/viewsnew.py
 config.py
 app/static/blurredVideos/*
 app/static/mocapVideos/*

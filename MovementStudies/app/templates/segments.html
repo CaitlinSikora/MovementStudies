@@ -31,6 +31,9 @@
       .errors {
         color:red;
       }
+      .error {
+        border: 1px solid red;
+      }
     </style>
 </head>
 <body>
@@ -48,13 +51,13 @@
 </h3>
 <!--<h2>Encode Movements for Video  {{ num }}</h2>-->
 
-<h2>Press and hold <img src="static/key.png" height="26"> to add a segment.  Drag segment endpoints to adjust times.</h2>
+<h2>Press and hold <img src="static/key.png" height="26"> key on your keyboard to add a segment.  Drag segment endpoints to adjust times.</h2>
 <!--<video id="video" controls preload="auto" height="400" canplaythrough='true'></video>-->
 
 <form method="POST">
 <!-- just to display all potential errors -->
 {% if form.errors %}
-    <ul class="errors">Hey there! Something went wrong! Please check that you've filled out all fields and try submitting again.</br>If you have already seen this message, please try again again. There may have been a server error. Thanks! </br>
+    <ul class="errors">Hey there! Something went wrong! Please check that you've filled out all fields and try submitting again.</br>If you have already seen this message, please try again again. Thanks! </br>
         <!--{% for field_name, field_errors in form.errors|dictsort if field_errors %}
             {% for error in field_errors %}
                 <li>{{ error }}</li>
@@ -66,7 +69,7 @@
     <div data-toggle="fieldset" id="phone-fieldset">
          <h3>Movement Segments <button type="button" id="add-button" data-toggle="fieldset-add-row"
                                           data-target="#phone-fieldset">Add Movement Manually</button></h3>
-          <h4>Once the video has loaded, press and hold down the <img src="static/key.png" height="18"> key for the duration of each movement you see.</br>Note: Movement segments may be out of order. This tool is in beta, so please try to manually adjust times if the code breaks.</h4>
+          <h4>Once the video has loaded, press and hold down <img src="static/key.png" height="18"> key on your keyboard (below DELETE) for the duration of each movement you see.</br>Note: Movement segments may be out of order. This tool is in beta, so please try to manually adjust times if the code breaks.</h4>
         <table>
             <tr>
                 <th>Start Time (s)</th>
@@ -78,11 +81,31 @@
             </tr>
             {% for segment in form.segments %}
                 <tr data-toggle="fieldset-entry">
-                    <td>{{ segment.start_time }}</td>
-                    <td>{{ segment.end_time }}</td>
-                    <td>{{ segment.laban_effort }}</td>
-                    <td>{{ segment.emotion }}</td>
-                    <td>{{ segment.body }}</td>
+                {% if segment.start_time.errors %}
+                  <td class="error">{{ segment.start_time }}</td>
+                {% else %}
+                  <td>{{ segment.start_time }}</td>
+                {% endif %}
+                {% if segment.end_time.errors %}
+                  <td class="error">{{ segment.end_time }}</td>
+                {% else %}
+                  <td>{{ segment.end_time }}</td>
+                {% endif %}
+                {% if segment.laban_effort.errors %}
+                  <td class="error">{{ segment.laban_effort }}</td>
+                {% else %}
+                  <td>{{ segment.laban_effort }}</td>
+                {% endif %}
+                {% if segment.emotion.errors %}
+                  <td class="error">{{ segment.emotion }}</td>
+                {% else %}
+                  <td>{{ segment.emotion }}</td>
+                {% endif %}
+                {% if segment.body.errors %}
+                  <td class="error">{{ segment.body }}</td>
+                {% else %}
+                  <td>{{ segment.body }}</td>
+                {% endif %}
                     <td><button type="button" data-toggle="fieldset-remove-row" id="phone-{{loop.index0}}-remove">Remove</button></td>
                 </tr>
             {% endfor %}
@@ -117,9 +140,9 @@ if ({{ choice }}){
 
 {% if form.errors %}
   if ({{ choice }}){
-    $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>Overall, how positive/negative are the emotions expressed?</br>{{ form.valence }}</p><p>Overall, how aroused/excited is the person in the video?</br>{{ form.arousal }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}{{ form.complete }}</p>');
+    $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{% if form.overall.errors %}<div class="error">{{ form.overall(size=100) }}</div>{% else %}{{ form.overall(size=100) }}{% endif %}</p><p>Overall, how positive/negative are the emotions expressed?</br>{% if form.valence.errors %}<div class="error">{{ form.valence }}</div>{% else %}{{ form.valence }}{% endif %}</p><p>Overall, how aroused/excited is the person in the video?</br>{% if form.arousal.errors %}<div class="error">{{ form.arousal }}</div>{% else %}{{ form.arousal }}{% endif %}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}{{ form.complete }}</p>');
   } else {
-        $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{{ form.overall(size=100) }}</p><p>Overall, how positive/negative are the emotions expressed?</br>{{ form.valence }}<p></p>Overall, how aroused/excited is the person in the video?</br>{{ form.arousal }}</p><p>How do you know?</br>{{ form.reason(size=100) }}</p><p>{{ form.submit }}</p>');
+        $('#addendum').html('<p>Overall, what emotions are being expressed in this video?</br>{% if form.overall.errors %}<div class="error">{{ form.overall(size=100) }}</div>{% else %}{{ form.overall(size=100) }}{% endif %}</p><p>Overall, how positive/negative are the emotions expressed?</br>{% if form.valence.errors %}<div class="error">{{ form.valence }}</div>{% else %}{{ form.valence }}{% endif %}</p><p>Overall, how aroused/excited is the person in the video?</br>{% if form.arousal.errors %}<div class="error">{{ form.arousal }}</div>{% else %}{{ form.arousal }}{% endif %}</p>{{ form.reason(size=100) }}</p><p>{{ form.submit }}</p>');
       }
 {% endif %}
 

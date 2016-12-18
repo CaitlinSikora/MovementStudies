@@ -40,11 +40,23 @@
       font-size:12px;
       font-family: 'Ubuntu', sans-serif;
     }
+
+    #backlink {
+      position: absolute;
+      top:20px;
+      right: 30px;
+      color: white;
+      font-size:20px;
+      font-family: 'Ubuntu', sans-serif;
+      text-align: left;
+    }
 </style>
   </head>
   <body>
     <div class="title_bar">
-    <h1>Expressive Movement Study    Video {{ video }}  </h1></div>
+    <h1>Expressive Movement Study    Video {{ video }}  </h1>
+    <a id="backlink" href="{{ url_for('results') }}">Back</a>
+    </div>
   </body>
   <script>
   // Set the video to be displayed

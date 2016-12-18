@@ -10,10 +10,24 @@
         th {
             padding: 10px 20px;
         }
+        img {
+            display: inline;
+            max-width:220px;
+        }
+        .holdimages {
+            float: right;
+            margin: 0 20px 0 20px;
+        }
+        p {
+            font-size: 14px;
+        }
     </style>
     <div>
-        <h2>Human Movement Quality Study Results</h2>
-        <p>The links below lead to visualizations of the results from a recent study on movement quality and body language. In this study, participants were asked to encode three out of twelve possible videos by noting start and end times for movements that they perceived to be expressive, classifying each movement with a Laban Effort (a system of established movement qualities from the discipline of dance) and an emotional word, as well as noting involved body parts. For participants, the task of encoding a video with specific times is tedious and time-consuming, so this web application was developed to aid in the process. Due to an indexing error in the application that could not be resolved in production, four out of eight motion capture animations had not been encoded by enough participants to provide reasonable results by the termination of the study, so only 8 out of 12 videos are included here.</p>
+        <h3>About the Study</h3>
+        <div class='holdimages'><img src='static/Efforts1.png'><img src='static/Efforts2.png'></div>
+        <p>The sensing, interpreting, and designing of movement for interacting with computing systems could allow machines greater capacity to interpret the actions of users to decipher user intention, as well as to communicate personalized, nuanced messages to meet individualized user needs, emulating conversation between humans. Harnessing the power of human movement as a medium for communication in the context of technology would have applications in the design of more sensitive assistive technologies, more perceptive smart homes, and more socially capable robots and conversational virtual characters. In order to realize this vision, we must improve our understanding of how humans imbue and extract meaning in and from body movement so that we can program computers to do the same. Traditional linguistic and cognitive science approaches to interpreting meaning from movement tend to consider shapes of specific, culturally defined gestures, timing of gestures with speech, and spatial referencing of deictic gestures (pointing). Interfaces between humans and computers echo this line of reasoning with one-to-one associations of mechanically specific movements and deictic gestures dominating the design of movement-based interactions. But these types of movements represent a small subset of the expressive movements performed by humans in their daily lives. In many cases, the quality with which a movement is performed is as communicative as the shape of the movement.</p>
+        <p>The studies of choreography and Laban Movement Analysis in the dance discipline offer systems for interpreting meaning from a person’s physical movements based on quality and context that can be generalized to establish a lexicon of detectable, expressive qualities in human movement that should inform the design of gestural interfaces, both on and off the screen. A series of pilot studies was conducted to assess the relevance of the Laban Effort system for classifying movement quality to the design of gestural interfaces. We determine that humans can recognize at least a subset of the Laban Efforts– Punch, Press, Glide, Wring, Dab, Slash, Flick, and Float– with a reasonable degree of reliability. Moreover, humans are likely to non-consciously perform these movement qualities when engaged in emotionally charged conversation and expression. We complete this research by drawing connections between several of the Laban Efforts and consistently interpreted and experienced emotional intentions. The links below lead to visualizations of the results from the second pilot study in this research. Participants were asked to encode at least three videos by noting start and end times for body movements that they perceived to be expressive, classifying each movement with a Laban Effort (a system of established movement qualities from the discipline of dance) and an emotional word, as well as noting involved body parts. For participants, the task of encoding a video with specific times is tedious and time-consuming, so this web application was developed to aid in the process.</p>
+        <h3>Results</h3>
         <p>Click on a video number to see how body language was interpretted in each video:
             <table>
                 <tr>
